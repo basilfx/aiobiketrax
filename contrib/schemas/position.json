@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "attributes": {
+    "batteryLevel": 100,
+    "alarm": "powerCut",
+    "armed": true,
+    "charge": false,
+    "ignition": false,
+    "status": 1,
+    "index": 1,
+    "distance": 0.0,
+    "totalDistance": 100.0,
+    "motion": false,
+    "hours": 11034000
+  },
+  "deviceId": 1,
+  "type": null,
+  "protocol": "h02",
+  "serverTime": "2022-06-01T00:00:00.000+00:00",
+  "deviceTime": "2022-06-01T00:00:00.000+00:00",
+  "fixTime": "2022-06-01T00:00:00.000+00:00",
+  "outdated": false,
+  "valid": true,
+  "latitude": 50.00,
+  "longitude": 5.0,
+  "altitude": 0.0,
+  "speed": 0.0,
+  "course": 0.0,
+  "address": null,
+  "accuracy": 0.0,
+  "network": null
+}

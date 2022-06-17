@@ -1,0 +1,23 @@
+{
+  "deviceId": 1,
+  "deviceName": "My E-bike",
+  "distance": 100.0,
+  "averageSpeed": 10.0,
+  "maxSpeed": 20.0,
+  "spentFuel": 0.0,
+  "startOdometer": 100.0,
+  "endOdometer": 200.0,
+  "startTime": "2022-06-01T00:00:00.000+00:00",
+  "endTime": "2022-06-01T01:00:00.000+00:00",
+  "startPositionId": 1,
+  "endPositionId": 5,
+  "startLat": 50.0,
+  "startLon": 5.0,
+  "endLat": 50.0,
+  "endLon": 5.0,
+  "startAddress": null,
+  "endAddress": null,
+  "duration": 3600000,
+  "driverUniqueId": null,
+  "driverName": null
+}

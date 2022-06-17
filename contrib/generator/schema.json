@@ -1,0 +1,593 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "definitions": {
+    "Device": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "attributes": {
+          "$ref": "#/definitions/DeviceAttributes"
+        },
+        "groupId": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uniqueId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "positionId": {
+          "type": "integer"
+        },
+        "geofenceIds": {
+          "type": "array",
+          "items": {}
+        },
+        "phone": {
+          "type": "null"
+        },
+        "model": {
+          "type": "null"
+        },
+        "contact": {
+          "type": "null"
+        },
+        "category": {
+          "type": "null"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attributes",
+        "category",
+        "contact",
+        "disabled",
+        "geofenceIds",
+        "groupId",
+        "id",
+        "lastUpdate",
+        "model",
+        "name",
+        "phone",
+        "positionId",
+        "status",
+        "uniqueId"
+      ],
+      "title": "Device"
+    },
+    "DeviceAttributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "trialEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "guarded": {
+          "type": "boolean"
+        },
+        "alarm": {
+          "type": "boolean"
+        },
+        "guardType": {
+          "type": "string"
+        },
+        "lastAlarm": {
+          "type": "integer"
+        },
+        "passport": {
+          "$ref": "#/definitions/Passport"
+        },
+        "autoGuard": {
+          "type": "boolean"
+        },
+        "geofenceRadius": {
+          "type": "integer"
+        },
+        "stolen": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "alarm",
+        "autoGuard",
+        "geofenceRadius",
+        "guardType",
+        "guarded",
+        "lastAlarm",
+        "passport",
+        "trialEnd"
+      ],
+      "title": "DeviceAttributes"
+    },
+    "Passport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "manufacturer": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "colour": {
+          "type": "string"
+        },
+        "bikeType": {
+          "type": "string"
+        },
+        "engine": {
+          "type": "string"
+        },
+        "insurance": {
+          "type": "boolean"
+        },
+        "bikePictures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "qt-uri-protocols": ["https"],
+            "qt-uri-extensions": [".jpeg"]
+          }
+        },
+        "receiptPictures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "qt-uri-protocols": ["https"],
+            "qt-uri-extensions": [".jpeg"]
+          }
+        },
+        "frameNumber": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string",
+          "format": "integer"
+        }
+      },
+      "required": [
+        "bikePictures",
+        "bikeType",
+        "colour",
+        "engine",
+        "frameNumber",
+        "insurance",
+        "manufacturer",
+        "model",
+        "price",
+        "receiptPictures"
+      ],
+      "title": "Passport"
+    },
+    "Position": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "attributes": {
+          "$ref": "#/definitions/PositionAttributes"
+        },
+        "deviceId": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "null"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "serverTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deviceTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fixTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "outdated": {
+          "type": "boolean"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "altitude": {
+          "type": "number"
+        },
+        "speed": {
+          "type": "number"
+        },
+        "course": {
+          "type": "number"
+        },
+        "address": {
+          "type": "null"
+        },
+        "accuracy": {
+          "type": "number"
+        },
+        "network": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "accuracy",
+        "address",
+        "altitude",
+        "attributes",
+        "course",
+        "deviceId",
+        "deviceTime",
+        "fixTime",
+        "id",
+        "latitude",
+        "longitude",
+        "network",
+        "outdated",
+        "protocol",
+        "serverTime",
+        "speed",
+        "type",
+        "valid"
+      ],
+      "title": "Position"
+    },
+    "PositionAttributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "batteryLevel": {
+          "type": "integer"
+        },
+        "alarm": {
+          "type": "string"
+        },
+        "armed": {
+          "type": "boolean"
+        },
+        "charge": {
+          "type": "boolean"
+        },
+        "ignition": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "integer"
+        },
+        "index": {
+          "type": "integer"
+        },
+        "distance": {
+          "type": "number"
+        },
+        "totalDistance": {
+          "type": "number"
+        },
+        "motion": {
+          "type": "boolean"
+        },
+        "hours": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "batteryLevel",
+        "charge",
+        "distance",
+        "hours",
+        "ignition",
+        "motion",
+        "status",
+        "totalDistance"
+      ],
+      "title": "PositionAttributes"
+    },
+    "Session": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "attributes": {
+          "$ref": "#/definitions/SessionAttributes"
+        },
+        "name": {
+          "type": "string"
+        },
+        "login": {
+          "type": "null"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "null"
+        },
+        "readonly": {
+          "type": "boolean"
+        },
+        "administrator": {
+          "type": "boolean"
+        },
+        "map": {
+          "type": "null"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "zoom": {
+          "type": "integer"
+        },
+        "twelveHourFormat": {
+          "type": "boolean"
+        },
+        "coordinateFormat": {
+          "type": "null"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "expirationTime": {
+          "type": "null"
+        },
+        "deviceLimit": {
+          "type": "integer"
+        },
+        "userLimit": {
+          "type": "integer"
+        },
+        "deviceReadonly": {
+          "type": "boolean"
+        },
+        "token": {
+          "type": "string"
+        },
+        "limitCommands": {
+          "type": "boolean"
+        },
+        "poiLayer": {
+          "type": "null"
+        },
+        "password": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "administrator",
+        "attributes",
+        "coordinateFormat",
+        "deviceLimit",
+        "deviceReadonly",
+        "disabled",
+        "email",
+        "expirationTime",
+        "id",
+        "latitude",
+        "limitCommands",
+        "login",
+        "longitude",
+        "map",
+        "name",
+        "password",
+        "phone",
+        "poiLayer",
+        "readonly",
+        "token",
+        "twelveHourFormat",
+        "userLimit",
+        "zoom"
+      ],
+      "title": "Session"
+    },
+    "SessionAttributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sendAnalytics": {
+          "type": "boolean"
+        },
+        "appEnvironment": {
+          "type": "string"
+        },
+        "appPackage": {
+          "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "fcmTokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "locale": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "appEnvironment",
+        "appPackage",
+        "appVersion",
+        "fcmTokens",
+        "locale",
+        "sendAnalytics"
+      ],
+      "title": "SessionAttributes"
+    },
+    "Subscription": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "trialEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "subscriptionId": {
+          "type": "null"
+        },
+        "category": {
+          "type": "string"
+        },
+        "trialDuration": {
+          "type": "integer"
+        },
+        "setupFee": {
+          "type": "null"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "uniqueId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "createdAt",
+        "id",
+        "setupFee",
+        "subscriptionId",
+        "trialDuration",
+        "trialEnd",
+        "uniqueId",
+        "updatedAt"
+      ],
+      "title": "Subscription"
+    },
+    "Trip": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "deviceId": {
+          "type": "integer"
+        },
+        "deviceName": {
+          "type": "string"
+        },
+        "distance": {
+          "type": "number"
+        },
+        "averageSpeed": {
+          "type": "number"
+        },
+        "maxSpeed": {
+          "type": "number"
+        },
+        "spentFuel": {
+          "type": "number"
+        },
+        "startOdometer": {
+          "type": "number"
+        },
+        "endOdometer": {
+          "type": "number"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startPositionId": {
+          "type": "integer"
+        },
+        "endPositionId": {
+          "type": "integer"
+        },
+        "startLat": {
+          "type": "number"
+        },
+        "startLon": {
+          "type": "number"
+        },
+        "endLat": {
+          "type": "number"
+        },
+        "endLon": {
+          "type": "number"
+        },
+        "startAddress": {
+          "type": "null"
+        },
+        "endAddress": {
+          "type": "null"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "driverUniqueId": {
+          "type": "null"
+        },
+        "driverName": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "averageSpeed",
+        "deviceId",
+        "deviceName",
+        "distance",
+        "driverName",
+        "driverUniqueId",
+        "duration",
+        "endAddress",
+        "endLat",
+        "endLon",
+        "endOdometer",
+        "endPositionId",
+        "endTime",
+        "maxSpeed",
+        "spentFuel",
+        "startAddress",
+        "startLat",
+        "startLon",
+        "startOdometer",
+        "startPositionId",
+        "startTime"
+      ],
+      "title": "Trip"
+    }
+  }
+}
