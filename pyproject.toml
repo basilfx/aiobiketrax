@@ -17,6 +17,14 @@ name = "aiobiketrax"
 version = "0.1.0"
 description = "Python library for interacting with the PowUnity BikeTrax GPS tracker."
 authors = ["Bas Stottelaar <basstottelaar@gmail.com>"]
+keywords = ["biketrax", "powunity", "asyncio", "iot", "gps"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/basilfx/aiobiketrax"
+repository = "https://github.com/basilfx/aiobiketrax"
+include = [
+    "LICENSE.md",
+]
 
 [tool.poetry.dependencies]
 aiohttp = "^3.8.1"
