@@ -81,7 +81,7 @@ class Passport:
         colour = from_str(obj.get("colour"))
         engine = from_str(obj.get("engine"))
         frame_number = from_str(obj.get("frameNumber"))
-        insurance = from_bool(obj.get("insurance"))
+        insurance = from_union([from_bool, from_none], obj.get("insurance"))
         manufacturer = from_str(obj.get("manufacturer"))
         model = from_str(obj.get("model"))
         price = int(from_str(obj.get("price")))
@@ -106,7 +106,9 @@ class Passport:
         result["colour"] = from_str(self.colour)
         result["engine"] = from_str(self.engine)
         result["frameNumber"] = from_str(self.frame_number)
-        result["insurance"] = from_bool(self.insurance)
+        result["insurance"] = from_union(
+            [from_bool, from_none], self.insurance
+        )
         result["manufacturer"] = from_str(self.manufacturer)
         result["model"] = from_str(self.model)
         result["price"] = from_str(str(self.price))
@@ -185,16 +187,16 @@ class Device:
     def from_dict(obj: Any) -> "Device":
         assert isinstance(obj, dict)
         attributes = DeviceAttributes.from_dict(obj.get("attributes"))
-        category = from_none(obj.get("category"))
-        contact = from_none(obj.get("contact"))
+        category = from_union([from_str, from_none], obj.get("category"))
+        contact = from_union([from_str, from_none], obj.get("contact"))
         disabled = from_bool(obj.get("disabled"))
         geofence_ids = from_list(lambda x: x, obj.get("geofenceIds"))
         group_id = from_int(obj.get("groupId"))
         id = from_int(obj.get("id"))
         last_update = from_datetime(obj.get("lastUpdate"))
-        model = from_none(obj.get("model"))
+        model = from_union([from_str, from_none], obj.get("model"))
         name = from_str(obj.get("name"))
-        phone = from_none(obj.get("phone"))
+        phone = from_union([from_str, from_none], obj.get("phone"))
         position_id = from_int(obj.get("positionId"))
         status = from_str(obj.get("status"))
         unique_id = from_str(obj.get("uniqueId"))
@@ -218,16 +220,16 @@ class Device:
     def to_dict(self) -> dict:
         result: dict = {}
         result["attributes"] = to_class(DeviceAttributes, self.attributes)
-        result["category"] = from_none(self.category)
-        result["contact"] = from_none(self.contact)
+        result["category"] = from_union([from_str, from_none], self.category)
+        result["contact"] = from_union([from_str, from_none], self.contact)
         result["disabled"] = from_bool(self.disabled)
         result["geofenceIds"] = from_list(lambda x: x, self.geofence_ids)
         result["groupId"] = from_int(self.group_id)
         result["id"] = from_int(self.id)
         result["lastUpdate"] = self.last_update.isoformat()
-        result["model"] = from_none(self.model)
+        result["model"] = from_union([from_str, from_none], self.model)
         result["name"] = from_str(self.name)
-        result["phone"] = from_none(self.phone)
+        result["phone"] = from_union([from_str, from_none], self.phone)
         result["positionId"] = from_int(self.position_id)
         result["status"] = from_str(self.status)
         result["uniqueId"] = from_str(self.unique_id)
@@ -317,7 +319,7 @@ class Position:
     def from_dict(obj: Any) -> "Position":
         assert isinstance(obj, dict)
         accuracy = from_float(obj.get("accuracy"))
-        address = from_none(obj.get("address"))
+        address = from_union([from_str, from_none], obj.get("address"))
         altitude = from_float(obj.get("altitude"))
         attributes = PositionAttributes.from_dict(obj.get("attributes"))
         course = from_float(obj.get("course"))
@@ -327,12 +329,12 @@ class Position:
         id = from_int(obj.get("id"))
         latitude = from_float(obj.get("latitude"))
         longitude = from_float(obj.get("longitude"))
-        network = from_none(obj.get("network"))
+        network = from_union([from_str, from_none], obj.get("network"))
         outdated = from_bool(obj.get("outdated"))
         protocol = from_str(obj.get("protocol"))
         server_time = from_datetime(obj.get("serverTime"))
         speed = from_float(obj.get("speed"))
-        type = from_none(obj.get("type"))
+        type = from_union([from_str, from_none], obj.get("type"))
         valid = from_bool(obj.get("valid"))
         return Position(
             accuracy,
@@ -358,7 +360,7 @@ class Position:
     def to_dict(self) -> dict:
         result: dict = {}
         result["accuracy"] = to_float(self.accuracy)
-        result["address"] = from_none(self.address)
+        result["address"] = from_union([from_str, from_none], self.address)
         result["altitude"] = to_float(self.altitude)
         result["attributes"] = to_class(PositionAttributes, self.attributes)
         result["course"] = to_float(self.course)
@@ -368,12 +370,12 @@ class Position:
         result["id"] = from_int(self.id)
         result["latitude"] = to_float(self.latitude)
         result["longitude"] = to_float(self.longitude)
-        result["network"] = from_none(self.network)
+        result["network"] = from_union([from_str, from_none], self.network)
         result["outdated"] = from_bool(self.outdated)
         result["protocol"] = from_str(self.protocol)
         result["serverTime"] = self.server_time.isoformat()
         result["speed"] = to_float(self.speed)
-        result["type"] = from_none(self.type)
+        result["type"] = from_union([from_str, from_none], self.type)
         result["valid"] = from_bool(self.valid)
         return result
 
@@ -540,8 +542,10 @@ class Subscription:
         category = from_str(obj.get("category"))
         created_at = from_datetime(obj.get("createdAt"))
         id = from_int(obj.get("id"))
-        setup_fee = from_none(obj.get("setupFee"))
-        subscription_id = from_none(obj.get("subscriptionId"))
+        setup_fee = from_union([from_int, from_none], obj.get("setupFee"))
+        subscription_id = from_union(
+            [from_str, from_none], obj.get("subscriptionId")
+        )
         trial_duration = from_int(obj.get("trialDuration"))
         trial_end = from_datetime(obj.get("trialEnd"))
         unique_id = from_str(obj.get("uniqueId"))
@@ -563,8 +567,10 @@ class Subscription:
         result["category"] = from_str(self.category)
         result["createdAt"] = self.created_at.isoformat()
         result["id"] = from_int(self.id)
-        result["setupFee"] = from_none(self.setup_fee)
-        result["subscriptionId"] = from_none(self.subscription_id)
+        result["setupFee"] = from_union([from_int, from_none], self.setup_fee)
+        result["subscriptionId"] = from_union(
+            [from_str, from_none], self.subscription_id
+        )
         result["trialDuration"] = from_int(self.trial_duration)
         result["trialEnd"] = self.trial_end.isoformat()
         result["uniqueId"] = from_str(self.unique_id)
@@ -603,10 +609,12 @@ class Trip:
         device_id = from_int(obj.get("deviceId"))
         device_name = from_str(obj.get("deviceName"))
         distance = from_float(obj.get("distance"))
-        driver_name = from_none(obj.get("driverName"))
-        driver_unique_id = from_none(obj.get("driverUniqueId"))
+        driver_name = from_union([from_str, from_none], obj.get("driverName"))
+        driver_unique_id = from_union(
+            [from_str, from_none], obj.get("driverUniqueId")
+        )
         duration = from_int(obj.get("duration"))
-        end_address = from_none(obj.get("endAddress"))
+        end_address = from_union([from_str, from_none], obj.get("endAddress"))
         end_lat = from_float(obj.get("endLat"))
         end_lon = from_float(obj.get("endLon"))
         end_odometer = from_float(obj.get("endOdometer"))
@@ -614,7 +622,9 @@ class Trip:
         end_time = from_datetime(obj.get("endTime"))
         max_speed = from_float(obj.get("maxSpeed"))
         spent_fuel = from_float(obj.get("spentFuel"))
-        start_address = from_none(obj.get("startAddress"))
+        start_address = from_union(
+            [from_str, from_none], obj.get("startAddress")
+        )
         start_lat = from_float(obj.get("startLat"))
         start_lon = from_float(obj.get("startLon"))
         start_odometer = from_float(obj.get("startOdometer"))
@@ -650,10 +660,16 @@ class Trip:
         result["deviceId"] = from_int(self.device_id)
         result["deviceName"] = from_str(self.device_name)
         result["distance"] = to_float(self.distance)
-        result["driverName"] = from_none(self.driver_name)
-        result["driverUniqueId"] = from_none(self.driver_unique_id)
+        result["driverName"] = from_union(
+            [from_str, from_none], self.driver_name
+        )
+        result["driverUniqueId"] = from_union(
+            [from_str, from_none], self.driver_unique_id
+        )
         result["duration"] = from_int(self.duration)
-        result["endAddress"] = from_none(self.end_address)
+        result["endAddress"] = from_union(
+            [from_str, from_none], self.end_address
+        )
         result["endLat"] = to_float(self.end_lat)
         result["endLon"] = to_float(self.end_lon)
         result["endOdometer"] = to_float(self.end_odometer)
@@ -661,7 +677,9 @@ class Trip:
         result["endTime"] = self.end_time.isoformat()
         result["maxSpeed"] = to_float(self.max_speed)
         result["spentFuel"] = to_float(self.spent_fuel)
-        result["startAddress"] = from_none(self.start_address)
+        result["startAddress"] = from_union(
+            [from_str, from_none], self.start_address
+        )
         result["startLat"] = to_float(self.start_lat)
         result["startLon"] = to_float(self.start_lon)
         result["startOdometer"] = to_float(self.start_odometer)
