@@ -3,7 +3,8 @@ Python library for interacting with the PowUnity BikeTrax GPS tracker.
 
 ## Introduction
 This library is mainly written to work with a custom component for
-Home Assistant.
+Home Assistant. You can find this custom component
+[here](https://github.com/basilfx/homeassistant-biketrax).
 
 The [PowUnity BikeTrax](https://powunity.com/) is a GPS tracker for electric
 bicycles. It provides real-time updates every when the bike is in motion, using
@@ -49,7 +50,7 @@ The models have been generated using [quicktype](https://quicktype.io/). See
 the `contrib/generator/` folder for more information.
 
 ## License
-See the `[LICENSE](LICENSE.md)` file (MIT license).
+See the [`LICENSE`](LICENSE.md) file (MIT license).
 
 ## Disclaimer
 Use this library at your own risk. I cannot be held responsible for any
