@@ -1,3 +1,5 @@
+# This file is auto-generated. See the README.md for more information.
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Callable, List, Optional, Type, TypeVar, cast
@@ -22,15 +24,6 @@ def from_bool(x: Any) -> bool:
     return x
 
 
-def from_int(x: Any) -> int:
-    assert isinstance(x, int) and not isinstance(x, bool)
-    return x
-
-
-def from_datetime(x: Any) -> datetime:
-    return dateutil.parser.parse(x)
-
-
 def from_none(x: Any) -> Any:
     assert x is None
     return x
@@ -43,6 +36,15 @@ def from_union(fs, x):
         except:
             pass
     assert False
+
+
+def from_int(x: Any) -> int:
+    assert isinstance(x, int) and not isinstance(x, bool)
+    return x
+
+
+def from_datetime(x: Any) -> datetime:
+    return dateutil.parser.parse(x)
 
 
 def to_class(c: Type[T], x: Any) -> dict:
@@ -67,11 +69,11 @@ class Passport:
     colour: str
     engine: str
     frame_number: str
-    insurance: bool
     manufacturer: str
     model: str
     price: int
     receipt_pictures: List[str]
+    insurance: Optional[bool] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Passport":
@@ -81,22 +83,22 @@ class Passport:
         colour = from_str(obj.get("colour"))
         engine = from_str(obj.get("engine"))
         frame_number = from_str(obj.get("frameNumber"))
-        insurance = from_bool(obj.get("insurance"))
         manufacturer = from_str(obj.get("manufacturer"))
         model = from_str(obj.get("model"))
         price = int(from_str(obj.get("price")))
         receipt_pictures = from_list(from_str, obj.get("receiptPictures"))
+        insurance = from_union([from_bool, from_none], obj.get("insurance"))
         return Passport(
             bike_pictures,
             bike_type,
             colour,
             engine,
             frame_number,
-            insurance,
             manufacturer,
             model,
             price,
             receipt_pictures,
+            insurance,
         )
 
     def to_dict(self) -> dict:
@@ -106,11 +108,13 @@ class Passport:
         result["colour"] = from_str(self.colour)
         result["engine"] = from_str(self.engine)
         result["frameNumber"] = from_str(self.frame_number)
-        result["insurance"] = from_bool(self.insurance)
         result["manufacturer"] = from_str(self.manufacturer)
         result["model"] = from_str(self.model)
         result["price"] = from_str(str(self.price))
         result["receiptPictures"] = from_list(from_str, self.receipt_pictures)
+        result["insurance"] = from_union(
+            [from_bool, from_none], self.insurance
+        )
         return result
 
 
@@ -167,70 +171,70 @@ class DeviceAttributes:
 @dataclass
 class Device:
     attributes: DeviceAttributes
-    category: None
-    contact: None
     disabled: bool
     geofence_ids: List[Any]
     group_id: int
     id: int
     last_update: datetime
-    model: None
     name: str
-    phone: None
     position_id: int
     status: str
     unique_id: str
+    category: Optional[str] = None
+    contact: Optional[str] = None
+    model: Optional[str] = None
+    phone: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Device":
         assert isinstance(obj, dict)
         attributes = DeviceAttributes.from_dict(obj.get("attributes"))
-        category = from_none(obj.get("category"))
-        contact = from_none(obj.get("contact"))
         disabled = from_bool(obj.get("disabled"))
         geofence_ids = from_list(lambda x: x, obj.get("geofenceIds"))
         group_id = from_int(obj.get("groupId"))
         id = from_int(obj.get("id"))
         last_update = from_datetime(obj.get("lastUpdate"))
-        model = from_none(obj.get("model"))
         name = from_str(obj.get("name"))
-        phone = from_none(obj.get("phone"))
         position_id = from_int(obj.get("positionId"))
         status = from_str(obj.get("status"))
         unique_id = from_str(obj.get("uniqueId"))
+        category = from_union([from_none, from_str], obj.get("category"))
+        contact = from_union([from_none, from_str], obj.get("contact"))
+        model = from_union([from_none, from_str], obj.get("model"))
+        phone = from_union([from_none, from_str], obj.get("phone"))
         return Device(
             attributes,
-            category,
-            contact,
             disabled,
             geofence_ids,
             group_id,
             id,
             last_update,
-            model,
             name,
-            phone,
             position_id,
             status,
             unique_id,
+            category,
+            contact,
+            model,
+            phone,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["attributes"] = to_class(DeviceAttributes, self.attributes)
-        result["category"] = from_none(self.category)
-        result["contact"] = from_none(self.contact)
         result["disabled"] = from_bool(self.disabled)
         result["geofenceIds"] = from_list(lambda x: x, self.geofence_ids)
         result["groupId"] = from_int(self.group_id)
         result["id"] = from_int(self.id)
         result["lastUpdate"] = self.last_update.isoformat()
-        result["model"] = from_none(self.model)
         result["name"] = from_str(self.name)
-        result["phone"] = from_none(self.phone)
         result["positionId"] = from_int(self.position_id)
         result["status"] = from_str(self.status)
         result["uniqueId"] = from_str(self.unique_id)
+        result["category"] = from_union([from_none, from_str], self.category)
+        result["contact"] = from_union([from_none, from_str], self.contact)
+        result["model"] = from_union([from_none, from_str], self.model)
+        result["phone"] = from_union([from_none, from_str], self.phone)
         return result
 
 
@@ -295,7 +299,6 @@ class PositionAttributes:
 @dataclass
 class Position:
     accuracy: float
-    address: None
     altitude: float
     attributes: PositionAttributes
     course: float
@@ -305,19 +308,19 @@ class Position:
     id: int
     latitude: float
     longitude: float
-    network: None
     outdated: bool
     protocol: str
     server_time: datetime
     speed: float
     type: None
     valid: bool
+    address: Optional[str] = None
+    network: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Position":
         assert isinstance(obj, dict)
         accuracy = from_float(obj.get("accuracy"))
-        address = from_none(obj.get("address"))
         altitude = from_float(obj.get("altitude"))
         attributes = PositionAttributes.from_dict(obj.get("attributes"))
         course = from_float(obj.get("course"))
@@ -327,16 +330,16 @@ class Position:
         id = from_int(obj.get("id"))
         latitude = from_float(obj.get("latitude"))
         longitude = from_float(obj.get("longitude"))
-        network = from_none(obj.get("network"))
         outdated = from_bool(obj.get("outdated"))
         protocol = from_str(obj.get("protocol"))
         server_time = from_datetime(obj.get("serverTime"))
         speed = from_float(obj.get("speed"))
         type = from_none(obj.get("type"))
         valid = from_bool(obj.get("valid"))
+        address = from_union([from_none, from_str], obj.get("address"))
+        network = from_union([from_none, from_str], obj.get("network"))
         return Position(
             accuracy,
-            address,
             altitude,
             attributes,
             course,
@@ -346,19 +349,19 @@ class Position:
             id,
             latitude,
             longitude,
-            network,
             outdated,
             protocol,
             server_time,
             speed,
             type,
             valid,
+            address,
+            network,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["accuracy"] = to_float(self.accuracy)
-        result["address"] = from_none(self.address)
         result["altitude"] = to_float(self.altitude)
         result["attributes"] = to_class(PositionAttributes, self.attributes)
         result["course"] = to_float(self.course)
@@ -368,13 +371,14 @@ class Position:
         result["id"] = from_int(self.id)
         result["latitude"] = to_float(self.latitude)
         result["longitude"] = to_float(self.longitude)
-        result["network"] = from_none(self.network)
         result["outdated"] = from_bool(self.outdated)
         result["protocol"] = from_str(self.protocol)
         result["serverTime"] = self.server_time.isoformat()
         result["speed"] = to_float(self.speed)
         result["type"] = from_none(self.type)
         result["valid"] = from_bool(self.valid)
+        result["address"] = from_union([from_none, from_str], self.address)
+        result["network"] = from_union([from_none, from_str], self.network)
         return result
 
 
@@ -528,11 +532,11 @@ class Subscription:
     created_at: datetime
     id: int
     setup_fee: None
-    subscription_id: None
     trial_duration: int
     trial_end: datetime
     unique_id: str
     updated_at: datetime
+    subscription_id: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Subscription":
@@ -541,21 +545,23 @@ class Subscription:
         created_at = from_datetime(obj.get("createdAt"))
         id = from_int(obj.get("id"))
         setup_fee = from_none(obj.get("setupFee"))
-        subscription_id = from_none(obj.get("subscriptionId"))
         trial_duration = from_int(obj.get("trialDuration"))
         trial_end = from_datetime(obj.get("trialEnd"))
         unique_id = from_str(obj.get("uniqueId"))
         updated_at = from_datetime(obj.get("updatedAt"))
+        subscription_id = from_union(
+            [from_none, from_str], obj.get("subscriptionId")
+        )
         return Subscription(
             category,
             created_at,
             id,
             setup_fee,
-            subscription_id,
             trial_duration,
             trial_end,
             unique_id,
             updated_at,
+            subscription_id,
         )
 
     def to_dict(self) -> dict:
@@ -564,11 +570,13 @@ class Subscription:
         result["createdAt"] = self.created_at.isoformat()
         result["id"] = from_int(self.id)
         result["setupFee"] = from_none(self.setup_fee)
-        result["subscriptionId"] = from_none(self.subscription_id)
         result["trialDuration"] = from_int(self.trial_duration)
         result["trialEnd"] = self.trial_end.isoformat()
         result["uniqueId"] = from_str(self.unique_id)
         result["updatedAt"] = self.updated_at.isoformat()
+        result["subscriptionId"] = from_union(
+            [from_none, from_str], self.subscription_id
+        )
         return result
 
 
