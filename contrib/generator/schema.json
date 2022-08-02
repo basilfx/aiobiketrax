@@ -159,6 +159,12 @@
         "price": {
           "type": "string",
           "format": "integer"
+        },
+        "shiftingSystemManufacturer": {
+          "type": "string"
+        },
+        "shiftingSystemModel": {
+          "type": "string"
         }
       },
       "required": [
@@ -328,7 +334,7 @@
           "type": "string"
         },
         "phone": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "readonly": {
           "type": "boolean"
@@ -337,7 +343,7 @@
           "type": "boolean"
         },
         "map": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "latitude": {
           "type": "number"
@@ -352,13 +358,14 @@
           "type": "boolean"
         },
         "coordinateFormat": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "disabled": {
           "type": "boolean"
         },
         "expirationTime": {
-          "type": "null"
+          "type": ["null", "string"],
+          "format": "date-time"
         },
         "deviceLimit": {
           "type": "integer"
@@ -376,10 +383,10 @@
           "type": "boolean"
         },
         "poiLayer": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "password": {
-          "type": "null"
+          "type": ["null", "string"]
         }
       },
       "required": [
@@ -548,19 +555,19 @@
           "type": "number"
         },
         "startAddress": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "endAddress": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "duration": {
           "type": "integer"
         },
         "driverUniqueId": {
-          "type": "null"
+          "type": ["null", "integer"]
         },
         "driverName": {
-          "type": "null"
+          "type": ["null", "string"]
         }
       },
       "required": [
