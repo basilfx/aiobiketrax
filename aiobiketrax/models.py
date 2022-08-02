@@ -1,38 +1,21 @@
+# This file is auto-generated. See the README.md for more information.
+
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Callable, List, Optional, Type, TypeVar, cast
+from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, cast
 
 import dateutil.parser
 
 T = TypeVar("T")
 
 
-def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
-    assert isinstance(x, list)
-    return [f(y) for y in x]
+def from_none(x: Any) -> Any:
+    assert x is None
+    return x
 
 
 def from_str(x: Any) -> str:
     assert isinstance(x, str)
-    return x
-
-
-def from_bool(x: Any) -> bool:
-    assert isinstance(x, bool)
-    return x
-
-
-def from_int(x: Any) -> int:
-    assert isinstance(x, int) and not isinstance(x, bool)
-    return x
-
-
-def from_datetime(x: Any) -> datetime:
-    return dateutil.parser.parse(x)
-
-
-def from_none(x: Any) -> Any:
-    assert x is None
     return x
 
 
@@ -43,6 +26,30 @@ def from_union(fs, x):
         except:
             pass
     assert False
+
+
+def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
+    assert isinstance(x, list)
+    return [f(y) for y in x]
+
+
+def from_bool(x: Any) -> bool:
+    assert isinstance(x, bool)
+    return x
+
+
+def is_type(t: Type[T], x: Any) -> T:
+    assert isinstance(x, t)
+    return x
+
+
+def from_int(x: Any) -> int:
+    assert isinstance(x, int) and not isinstance(x, bool)
+    return x
+
+
+def from_datetime(x: Any) -> datetime:
+    return dateutil.parser.parse(x)
 
 
 def to_class(c: Type[T], x: Any) -> dict:
@@ -60,33 +67,59 @@ def to_float(x: Any) -> float:
     return x
 
 
+def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
+    assert isinstance(x, dict)
+    return {k: f(v) for (k, v) in x.items()}
+
+
 @dataclass
 class Passport:
-    bike_pictures: List[str]
-    bike_type: str
-    colour: str
-    engine: str
-    frame_number: str
-    insurance: bool
-    manufacturer: str
-    model: str
-    price: int
-    receipt_pictures: List[str]
+    price: Optional[int] = None
+    bike_pictures: Optional[List[str]] = None
+    bike_type: Optional[str] = None
+    colour: Optional[str] = None
+    engine: Optional[str] = None
+    frame_number: Optional[str] = None
+    insurance: Optional[bool] = None
+    manufacturer: Optional[str] = None
+    model: Optional[str] = None
+    receipt_pictures: Optional[List[str]] = None
+    shifting_system_manufacturer: Optional[str] = None
+    shifting_system_model: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Passport":
         assert isinstance(obj, dict)
-        bike_pictures = from_list(from_str, obj.get("bikePictures"))
-        bike_type = from_str(obj.get("bikeType"))
-        colour = from_str(obj.get("colour"))
-        engine = from_str(obj.get("engine"))
-        frame_number = from_str(obj.get("frameNumber"))
-        insurance = from_bool(obj.get("insurance"))
-        manufacturer = from_str(obj.get("manufacturer"))
-        model = from_str(obj.get("model"))
-        price = int(from_str(obj.get("price")))
-        receipt_pictures = from_list(from_str, obj.get("receiptPictures"))
+        price = from_union(
+            [from_none, lambda x: int(from_str(x))], obj.get("price")
+        )
+        bike_pictures = from_union(
+            [lambda x: from_list(from_str, x), from_none],
+            obj.get("bikePictures"),
+        )
+        bike_type = from_union([from_str, from_none], obj.get("bikeType"))
+        colour = from_union([from_str, from_none], obj.get("colour"))
+        engine = from_union([from_str, from_none], obj.get("engine"))
+        frame_number = from_union(
+            [from_str, from_none], obj.get("frameNumber")
+        )
+        insurance = from_union([from_bool, from_none], obj.get("insurance"))
+        manufacturer = from_union(
+            [from_str, from_none], obj.get("manufacturer")
+        )
+        model = from_union([from_str, from_none], obj.get("model"))
+        receipt_pictures = from_union(
+            [lambda x: from_list(from_str, x), from_none],
+            obj.get("receiptPictures"),
+        )
+        shifting_system_manufacturer = from_union(
+            [from_str, from_none], obj.get("shiftingSystemManufacturer")
+        )
+        shifting_system_model = from_union(
+            [from_str, from_none], obj.get("shiftingSystemModel")
+        )
         return Passport(
+            price,
             bike_pictures,
             bike_type,
             colour,
@@ -95,49 +128,79 @@ class Passport:
             insurance,
             manufacturer,
             model,
-            price,
             receipt_pictures,
+            shifting_system_manufacturer,
+            shifting_system_model,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["bikePictures"] = from_list(from_str, self.bike_pictures)
-        result["bikeType"] = from_str(self.bike_type)
-        result["colour"] = from_str(self.colour)
-        result["engine"] = from_str(self.engine)
-        result["frameNumber"] = from_str(self.frame_number)
-        result["insurance"] = from_bool(self.insurance)
-        result["manufacturer"] = from_str(self.manufacturer)
-        result["model"] = from_str(self.model)
-        result["price"] = from_str(str(self.price))
-        result["receiptPictures"] = from_list(from_str, self.receipt_pictures)
+        result["price"] = from_union(
+            [
+                lambda x: from_none((lambda x: is_type(type(None), x))(x)),
+                lambda x: from_str(
+                    (lambda x: str((lambda x: is_type(int, x))(x)))(x)
+                ),
+            ],
+            self.price,
+        )
+        result["bikePictures"] = from_union(
+            [lambda x: from_list(from_str, x), from_none], self.bike_pictures
+        )
+        result["bikeType"] = from_union([from_str, from_none], self.bike_type)
+        result["colour"] = from_union([from_str, from_none], self.colour)
+        result["engine"] = from_union([from_str, from_none], self.engine)
+        result["frameNumber"] = from_union(
+            [from_str, from_none], self.frame_number
+        )
+        result["insurance"] = from_union(
+            [from_bool, from_none], self.insurance
+        )
+        result["manufacturer"] = from_union(
+            [from_str, from_none], self.manufacturer
+        )
+        result["model"] = from_union([from_str, from_none], self.model)
+        result["receiptPictures"] = from_union(
+            [lambda x: from_list(from_str, x), from_none],
+            self.receipt_pictures,
+        )
+        result["shiftingSystemManufacturer"] = from_union(
+            [from_str, from_none], self.shifting_system_manufacturer
+        )
+        result["shiftingSystemModel"] = from_union(
+            [from_str, from_none], self.shifting_system_model
+        )
         return result
 
 
 @dataclass
 class DeviceAttributes:
-    alarm: bool
-    auto_guard: bool
-    geofence_radius: int
-    guarded: bool
-    guard_type: str
-    last_alarm: int
-    passport: Passport
-    trial_end: datetime
+    alarm: Optional[bool] = None
+    auto_guard: Optional[bool] = None
+    geofence_radius: Optional[int] = None
+    guarded: Optional[bool] = None
+    guard_type: Optional[str] = None
+    last_alarm: Optional[int] = None
+    passport: Optional[Passport] = None
     stolen: Optional[bool] = None
+    trial_end: Optional[datetime] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "DeviceAttributes":
         assert isinstance(obj, dict)
-        alarm = from_bool(obj.get("alarm"))
-        auto_guard = from_bool(obj.get("autoGuard"))
-        geofence_radius = from_int(obj.get("geofenceRadius"))
-        guarded = from_bool(obj.get("guarded"))
-        guard_type = from_str(obj.get("guardType"))
-        last_alarm = from_int(obj.get("lastAlarm"))
-        passport = Passport.from_dict(obj.get("passport"))
-        trial_end = from_datetime(obj.get("trialEnd"))
+        alarm = from_union([from_bool, from_none], obj.get("alarm"))
+        auto_guard = from_union([from_bool, from_none], obj.get("autoGuard"))
+        geofence_radius = from_union(
+            [from_int, from_none], obj.get("geofenceRadius")
+        )
+        guarded = from_union([from_bool, from_none], obj.get("guarded"))
+        guard_type = from_union([from_str, from_none], obj.get("guardType"))
+        last_alarm = from_union([from_int, from_none], obj.get("lastAlarm"))
+        passport = from_union(
+            [Passport.from_dict, from_none], obj.get("passport")
+        )
         stolen = from_union([from_bool, from_none], obj.get("stolen"))
+        trial_end = from_union([from_datetime, from_none], obj.get("trialEnd"))
         return DeviceAttributes(
             alarm,
             auto_guard,
@@ -146,156 +209,175 @@ class DeviceAttributes:
             guard_type,
             last_alarm,
             passport,
-            trial_end,
             stolen,
+            trial_end,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["alarm"] = from_bool(self.alarm)
-        result["autoGuard"] = from_bool(self.auto_guard)
-        result["geofenceRadius"] = from_int(self.geofence_radius)
-        result["guarded"] = from_bool(self.guarded)
-        result["guardType"] = from_str(self.guard_type)
-        result["lastAlarm"] = from_int(self.last_alarm)
-        result["passport"] = to_class(Passport, self.passport)
-        result["trialEnd"] = self.trial_end.isoformat()
+        result["alarm"] = from_union([from_bool, from_none], self.alarm)
+        result["autoGuard"] = from_union(
+            [from_bool, from_none], self.auto_guard
+        )
+        result["geofenceRadius"] = from_union(
+            [from_int, from_none], self.geofence_radius
+        )
+        result["guarded"] = from_union([from_bool, from_none], self.guarded)
+        result["guardType"] = from_union(
+            [from_str, from_none], self.guard_type
+        )
+        result["lastAlarm"] = from_union(
+            [from_int, from_none], self.last_alarm
+        )
+        result["passport"] = from_union(
+            [lambda x: to_class(Passport, x), from_none], self.passport
+        )
         result["stolen"] = from_union([from_bool, from_none], self.stolen)
+        result["trialEnd"] = from_union(
+            [lambda x: x.isoformat(), from_none], self.trial_end
+        )
         return result
 
 
 @dataclass
 class Device:
     attributes: DeviceAttributes
-    category: None
-    contact: None
     disabled: bool
     geofence_ids: List[Any]
     group_id: int
     id: int
     last_update: datetime
-    model: None
     name: str
-    phone: None
     position_id: int
     status: str
     unique_id: str
+    category: Optional[str] = None
+    contact: Optional[str] = None
+    model: Optional[str] = None
+    phone: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Device":
         assert isinstance(obj, dict)
         attributes = DeviceAttributes.from_dict(obj.get("attributes"))
-        category = from_none(obj.get("category"))
-        contact = from_none(obj.get("contact"))
         disabled = from_bool(obj.get("disabled"))
         geofence_ids = from_list(lambda x: x, obj.get("geofenceIds"))
         group_id = from_int(obj.get("groupId"))
         id = from_int(obj.get("id"))
         last_update = from_datetime(obj.get("lastUpdate"))
-        model = from_none(obj.get("model"))
         name = from_str(obj.get("name"))
-        phone = from_none(obj.get("phone"))
         position_id = from_int(obj.get("positionId"))
         status = from_str(obj.get("status"))
         unique_id = from_str(obj.get("uniqueId"))
+        category = from_union([from_none, from_str], obj.get("category"))
+        contact = from_union([from_none, from_str], obj.get("contact"))
+        model = from_union([from_none, from_str], obj.get("model"))
+        phone = from_union([from_none, from_str], obj.get("phone"))
         return Device(
             attributes,
-            category,
-            contact,
             disabled,
             geofence_ids,
             group_id,
             id,
             last_update,
-            model,
             name,
-            phone,
             position_id,
             status,
             unique_id,
+            category,
+            contact,
+            model,
+            phone,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["attributes"] = to_class(DeviceAttributes, self.attributes)
-        result["category"] = from_none(self.category)
-        result["contact"] = from_none(self.contact)
         result["disabled"] = from_bool(self.disabled)
         result["geofenceIds"] = from_list(lambda x: x, self.geofence_ids)
         result["groupId"] = from_int(self.group_id)
         result["id"] = from_int(self.id)
         result["lastUpdate"] = self.last_update.isoformat()
-        result["model"] = from_none(self.model)
         result["name"] = from_str(self.name)
-        result["phone"] = from_none(self.phone)
         result["positionId"] = from_int(self.position_id)
         result["status"] = from_str(self.status)
         result["uniqueId"] = from_str(self.unique_id)
+        result["category"] = from_union([from_none, from_str], self.category)
+        result["contact"] = from_union([from_none, from_str], self.contact)
+        result["model"] = from_union([from_none, from_str], self.model)
+        result["phone"] = from_union([from_none, from_str], self.phone)
         return result
 
 
 @dataclass
 class PositionAttributes:
-    battery_level: int
-    charge: bool
-    distance: float
-    hours: int
-    ignition: bool
-    motion: bool
-    status: int
-    total_distance: float
     alarm: Optional[str] = None
     armed: Optional[bool] = None
+    battery_level: Optional[int] = None
+    charge: Optional[bool] = None
+    distance: Optional[float] = None
+    hours: Optional[int] = None
+    ignition: Optional[bool] = None
     index: Optional[int] = None
+    motion: Optional[bool] = None
+    status: Optional[int] = None
+    total_distance: Optional[float] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "PositionAttributes":
         assert isinstance(obj, dict)
-        battery_level = from_int(obj.get("batteryLevel"))
-        charge = from_bool(obj.get("charge"))
-        distance = from_float(obj.get("distance"))
-        hours = from_int(obj.get("hours"))
-        ignition = from_bool(obj.get("ignition"))
-        motion = from_bool(obj.get("motion"))
-        status = from_int(obj.get("status"))
-        total_distance = from_float(obj.get("totalDistance"))
         alarm = from_union([from_str, from_none], obj.get("alarm"))
         armed = from_union([from_bool, from_none], obj.get("armed"))
+        battery_level = from_union(
+            [from_int, from_none], obj.get("batteryLevel")
+        )
+        charge = from_union([from_bool, from_none], obj.get("charge"))
+        distance = from_union([from_float, from_none], obj.get("distance"))
+        hours = from_union([from_int, from_none], obj.get("hours"))
+        ignition = from_union([from_bool, from_none], obj.get("ignition"))
         index = from_union([from_int, from_none], obj.get("index"))
+        motion = from_union([from_bool, from_none], obj.get("motion"))
+        status = from_union([from_int, from_none], obj.get("status"))
+        total_distance = from_union(
+            [from_float, from_none], obj.get("totalDistance")
+        )
         return PositionAttributes(
+            alarm,
+            armed,
             battery_level,
             charge,
             distance,
             hours,
             ignition,
+            index,
             motion,
             status,
             total_distance,
-            alarm,
-            armed,
-            index,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["batteryLevel"] = from_int(self.battery_level)
-        result["charge"] = from_bool(self.charge)
-        result["distance"] = to_float(self.distance)
-        result["hours"] = from_int(self.hours)
-        result["ignition"] = from_bool(self.ignition)
-        result["motion"] = from_bool(self.motion)
-        result["status"] = from_int(self.status)
-        result["totalDistance"] = to_float(self.total_distance)
         result["alarm"] = from_union([from_str, from_none], self.alarm)
         result["armed"] = from_union([from_bool, from_none], self.armed)
+        result["batteryLevel"] = from_union(
+            [from_int, from_none], self.battery_level
+        )
+        result["charge"] = from_union([from_bool, from_none], self.charge)
+        result["distance"] = from_union([to_float, from_none], self.distance)
+        result["hours"] = from_union([from_int, from_none], self.hours)
+        result["ignition"] = from_union([from_bool, from_none], self.ignition)
         result["index"] = from_union([from_int, from_none], self.index)
+        result["motion"] = from_union([from_bool, from_none], self.motion)
+        result["status"] = from_union([from_int, from_none], self.status)
+        result["totalDistance"] = from_union(
+            [to_float, from_none], self.total_distance
+        )
         return result
 
 
 @dataclass
 class Position:
     accuracy: float
-    address: None
     altitude: float
     attributes: PositionAttributes
     course: float
@@ -305,19 +387,19 @@ class Position:
     id: int
     latitude: float
     longitude: float
-    network: None
     outdated: bool
     protocol: str
     server_time: datetime
     speed: float
     type: None
     valid: bool
+    address: Optional[str] = None
+    network: Optional[Dict[str, Any]] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Position":
         assert isinstance(obj, dict)
         accuracy = from_float(obj.get("accuracy"))
-        address = from_none(obj.get("address"))
         altitude = from_float(obj.get("altitude"))
         attributes = PositionAttributes.from_dict(obj.get("attributes"))
         course = from_float(obj.get("course"))
@@ -327,16 +409,19 @@ class Position:
         id = from_int(obj.get("id"))
         latitude = from_float(obj.get("latitude"))
         longitude = from_float(obj.get("longitude"))
-        network = from_none(obj.get("network"))
         outdated = from_bool(obj.get("outdated"))
         protocol = from_str(obj.get("protocol"))
         server_time = from_datetime(obj.get("serverTime"))
         speed = from_float(obj.get("speed"))
         type = from_none(obj.get("type"))
         valid = from_bool(obj.get("valid"))
+        address = from_union([from_none, from_str], obj.get("address"))
+        network = from_union(
+            [from_none, lambda x: from_dict(lambda x: x, x)],
+            obj.get("network"),
+        )
         return Position(
             accuracy,
-            address,
             altitude,
             attributes,
             course,
@@ -346,19 +431,19 @@ class Position:
             id,
             latitude,
             longitude,
-            network,
             outdated,
             protocol,
             server_time,
             speed,
             type,
             valid,
+            address,
+            network,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["accuracy"] = to_float(self.accuracy)
-        result["address"] = from_none(self.address)
         result["altitude"] = to_float(self.altitude)
         result["attributes"] = to_class(PositionAttributes, self.attributes)
         result["course"] = to_float(self.course)
@@ -368,34 +453,43 @@ class Position:
         result["id"] = from_int(self.id)
         result["latitude"] = to_float(self.latitude)
         result["longitude"] = to_float(self.longitude)
-        result["network"] = from_none(self.network)
         result["outdated"] = from_bool(self.outdated)
         result["protocol"] = from_str(self.protocol)
         result["serverTime"] = self.server_time.isoformat()
         result["speed"] = to_float(self.speed)
         result["type"] = from_none(self.type)
         result["valid"] = from_bool(self.valid)
+        result["address"] = from_union([from_none, from_str], self.address)
+        result["network"] = from_union(
+            [from_none, lambda x: from_dict(lambda x: x, x)], self.network
+        )
         return result
 
 
 @dataclass
 class SessionAttributes:
-    app_environment: str
-    app_package: str
-    app_version: str
-    fcm_tokens: List[str]
-    locale: str
-    send_analytics: bool
+    app_environment: Optional[str] = None
+    app_package: Optional[str] = None
+    app_version: Optional[str] = None
+    fcm_tokens: Optional[List[str]] = None
+    locale: Optional[str] = None
+    send_analytics: Optional[bool] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "SessionAttributes":
         assert isinstance(obj, dict)
-        app_environment = from_str(obj.get("appEnvironment"))
-        app_package = from_str(obj.get("appPackage"))
-        app_version = from_str(obj.get("appVersion"))
-        fcm_tokens = from_list(from_str, obj.get("fcmTokens"))
-        locale = from_str(obj.get("locale"))
-        send_analytics = from_bool(obj.get("sendAnalytics"))
+        app_environment = from_union(
+            [from_str, from_none], obj.get("appEnvironment")
+        )
+        app_package = from_union([from_str, from_none], obj.get("appPackage"))
+        app_version = from_union([from_str, from_none], obj.get("appVersion"))
+        fcm_tokens = from_union(
+            [lambda x: from_list(from_str, x), from_none], obj.get("fcmTokens")
+        )
+        locale = from_union([from_str, from_none], obj.get("locale"))
+        send_analytics = from_union(
+            [from_bool, from_none], obj.get("sendAnalytics")
+        )
         return SessionAttributes(
             app_environment,
             app_package,
@@ -407,12 +501,22 @@ class SessionAttributes:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["appEnvironment"] = from_str(self.app_environment)
-        result["appPackage"] = from_str(self.app_package)
-        result["appVersion"] = from_str(self.app_version)
-        result["fcmTokens"] = from_list(from_str, self.fcm_tokens)
-        result["locale"] = from_str(self.locale)
-        result["sendAnalytics"] = from_bool(self.send_analytics)
+        result["appEnvironment"] = from_union(
+            [from_str, from_none], self.app_environment
+        )
+        result["appPackage"] = from_union(
+            [from_str, from_none], self.app_package
+        )
+        result["appVersion"] = from_union(
+            [from_str, from_none], self.app_version
+        )
+        result["fcmTokens"] = from_union(
+            [lambda x: from_list(from_str, x), from_none], self.fcm_tokens
+        )
+        result["locale"] = from_union([from_str, from_none], self.locale)
+        result["sendAnalytics"] = from_union(
+            [from_bool, from_none], self.send_analytics
+        )
         return result
 
 
@@ -420,105 +524,113 @@ class SessionAttributes:
 class Session:
     administrator: bool
     attributes: SessionAttributes
-    coordinate_format: None
     device_limit: int
     device_readonly: bool
     disabled: bool
     email: str
-    expiration_time: None
     id: int
     latitude: float
     limit_commands: bool
     login: None
     longitude: float
-    map: None
     name: str
-    password: None
-    phone: None
-    poi_layer: None
     readonly: bool
     token: str
     twelve_hour_format: bool
     user_limit: int
     zoom: int
+    coordinate_format: Optional[str] = None
+    expiration_time: Optional[datetime] = None
+    map: Optional[str] = None
+    password: Optional[str] = None
+    phone: Optional[str] = None
+    poi_layer: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Session":
         assert isinstance(obj, dict)
         administrator = from_bool(obj.get("administrator"))
         attributes = SessionAttributes.from_dict(obj.get("attributes"))
-        coordinate_format = from_none(obj.get("coordinateFormat"))
         device_limit = from_int(obj.get("deviceLimit"))
         device_readonly = from_bool(obj.get("deviceReadonly"))
         disabled = from_bool(obj.get("disabled"))
         email = from_str(obj.get("email"))
-        expiration_time = from_none(obj.get("expirationTime"))
         id = from_int(obj.get("id"))
         latitude = from_float(obj.get("latitude"))
         limit_commands = from_bool(obj.get("limitCommands"))
         login = from_none(obj.get("login"))
         longitude = from_float(obj.get("longitude"))
-        map = from_none(obj.get("map"))
         name = from_str(obj.get("name"))
-        password = from_none(obj.get("password"))
-        phone = from_none(obj.get("phone"))
-        poi_layer = from_none(obj.get("poiLayer"))
         readonly = from_bool(obj.get("readonly"))
         token = from_str(obj.get("token"))
         twelve_hour_format = from_bool(obj.get("twelveHourFormat"))
         user_limit = from_int(obj.get("userLimit"))
         zoom = from_int(obj.get("zoom"))
+        coordinate_format = from_union(
+            [from_none, from_str], obj.get("coordinateFormat")
+        )
+        expiration_time = from_union(
+            [from_datetime, from_none], obj.get("expirationTime")
+        )
+        map = from_union([from_none, from_str], obj.get("map"))
+        password = from_union([from_none, from_str], obj.get("password"))
+        phone = from_union([from_none, from_str], obj.get("phone"))
+        poi_layer = from_union([from_none, from_str], obj.get("poiLayer"))
         return Session(
             administrator,
             attributes,
-            coordinate_format,
             device_limit,
             device_readonly,
             disabled,
             email,
-            expiration_time,
             id,
             latitude,
             limit_commands,
             login,
             longitude,
-            map,
             name,
-            password,
-            phone,
-            poi_layer,
             readonly,
             token,
             twelve_hour_format,
             user_limit,
             zoom,
+            coordinate_format,
+            expiration_time,
+            map,
+            password,
+            phone,
+            poi_layer,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["administrator"] = from_bool(self.administrator)
         result["attributes"] = to_class(SessionAttributes, self.attributes)
-        result["coordinateFormat"] = from_none(self.coordinate_format)
         result["deviceLimit"] = from_int(self.device_limit)
         result["deviceReadonly"] = from_bool(self.device_readonly)
         result["disabled"] = from_bool(self.disabled)
         result["email"] = from_str(self.email)
-        result["expirationTime"] = from_none(self.expiration_time)
         result["id"] = from_int(self.id)
         result["latitude"] = to_float(self.latitude)
         result["limitCommands"] = from_bool(self.limit_commands)
         result["login"] = from_none(self.login)
         result["longitude"] = to_float(self.longitude)
-        result["map"] = from_none(self.map)
         result["name"] = from_str(self.name)
-        result["password"] = from_none(self.password)
-        result["phone"] = from_none(self.phone)
-        result["poiLayer"] = from_none(self.poi_layer)
         result["readonly"] = from_bool(self.readonly)
         result["token"] = from_str(self.token)
         result["twelveHourFormat"] = from_bool(self.twelve_hour_format)
         result["userLimit"] = from_int(self.user_limit)
         result["zoom"] = from_int(self.zoom)
+        result["coordinateFormat"] = from_union(
+            [from_none, from_str], self.coordinate_format
+        )
+        result["expirationTime"] = from_union(
+            [lambda x: x.isoformat(), from_none], self.expiration_time
+        )
+        result["map"] = from_union([from_none, from_str], self.map)
+        result["password"] = from_union([from_none, from_str], self.password)
+        result["phone"] = from_union([from_none, from_str], self.phone)
+        result["poiLayer"] = from_union([from_none, from_str], self.poi_layer)
         return result
 
 
@@ -528,11 +640,11 @@ class Subscription:
     created_at: datetime
     id: int
     setup_fee: None
-    subscription_id: None
     trial_duration: int
     trial_end: datetime
     unique_id: str
     updated_at: datetime
+    subscription_id: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Subscription":
@@ -541,21 +653,23 @@ class Subscription:
         created_at = from_datetime(obj.get("createdAt"))
         id = from_int(obj.get("id"))
         setup_fee = from_none(obj.get("setupFee"))
-        subscription_id = from_none(obj.get("subscriptionId"))
         trial_duration = from_int(obj.get("trialDuration"))
         trial_end = from_datetime(obj.get("trialEnd"))
         unique_id = from_str(obj.get("uniqueId"))
         updated_at = from_datetime(obj.get("updatedAt"))
+        subscription_id = from_union(
+            [from_none, from_str], obj.get("subscriptionId")
+        )
         return Subscription(
             category,
             created_at,
             id,
             setup_fee,
-            subscription_id,
             trial_duration,
             trial_end,
             unique_id,
             updated_at,
+            subscription_id,
         )
 
     def to_dict(self) -> dict:
@@ -564,11 +678,13 @@ class Subscription:
         result["createdAt"] = self.created_at.isoformat()
         result["id"] = from_int(self.id)
         result["setupFee"] = from_none(self.setup_fee)
-        result["subscriptionId"] = from_none(self.subscription_id)
         result["trialDuration"] = from_int(self.trial_duration)
         result["trialEnd"] = self.trial_end.isoformat()
         result["uniqueId"] = from_str(self.unique_id)
         result["updatedAt"] = self.updated_at.isoformat()
+        result["subscriptionId"] = from_union(
+            [from_none, from_str], self.subscription_id
+        )
         return result
 
 
@@ -578,10 +694,7 @@ class Trip:
     device_id: int
     device_name: str
     distance: float
-    driver_name: None
-    driver_unique_id: None
     duration: int
-    end_address: None
     end_lat: float
     end_lon: float
     end_odometer: float
@@ -589,12 +702,15 @@ class Trip:
     end_time: datetime
     max_speed: float
     spent_fuel: float
-    start_address: None
     start_lat: float
     start_lon: float
     start_odometer: float
     start_position_id: int
     start_time: datetime
+    driver_name: Optional[str] = None
+    driver_unique_id: Optional[int] = None
+    end_address: Optional[str] = None
+    start_address: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Trip":
@@ -603,10 +719,7 @@ class Trip:
         device_id = from_int(obj.get("deviceId"))
         device_name = from_str(obj.get("deviceName"))
         distance = from_float(obj.get("distance"))
-        driver_name = from_none(obj.get("driverName"))
-        driver_unique_id = from_none(obj.get("driverUniqueId"))
         duration = from_int(obj.get("duration"))
-        end_address = from_none(obj.get("endAddress"))
         end_lat = from_float(obj.get("endLat"))
         end_lon = from_float(obj.get("endLon"))
         end_odometer = from_float(obj.get("endOdometer"))
@@ -614,21 +727,25 @@ class Trip:
         end_time = from_datetime(obj.get("endTime"))
         max_speed = from_float(obj.get("maxSpeed"))
         spent_fuel = from_float(obj.get("spentFuel"))
-        start_address = from_none(obj.get("startAddress"))
         start_lat = from_float(obj.get("startLat"))
         start_lon = from_float(obj.get("startLon"))
         start_odometer = from_float(obj.get("startOdometer"))
         start_position_id = from_int(obj.get("startPositionId"))
         start_time = from_datetime(obj.get("startTime"))
+        driver_name = from_union([from_none, from_str], obj.get("driverName"))
+        driver_unique_id = from_union(
+            [from_int, from_none], obj.get("driverUniqueId")
+        )
+        end_address = from_union([from_none, from_str], obj.get("endAddress"))
+        start_address = from_union(
+            [from_none, from_str], obj.get("startAddress")
+        )
         return Trip(
             average_speed,
             device_id,
             device_name,
             distance,
-            driver_name,
-            driver_unique_id,
             duration,
-            end_address,
             end_lat,
             end_lon,
             end_odometer,
@@ -636,12 +753,15 @@ class Trip:
             end_time,
             max_speed,
             spent_fuel,
-            start_address,
             start_lat,
             start_lon,
             start_odometer,
             start_position_id,
             start_time,
+            driver_name,
+            driver_unique_id,
+            end_address,
+            start_address,
         )
 
     def to_dict(self) -> dict:
@@ -650,10 +770,7 @@ class Trip:
         result["deviceId"] = from_int(self.device_id)
         result["deviceName"] = from_str(self.device_name)
         result["distance"] = to_float(self.distance)
-        result["driverName"] = from_none(self.driver_name)
-        result["driverUniqueId"] = from_none(self.driver_unique_id)
         result["duration"] = from_int(self.duration)
-        result["endAddress"] = from_none(self.end_address)
         result["endLat"] = to_float(self.end_lat)
         result["endLon"] = to_float(self.end_lon)
         result["endOdometer"] = to_float(self.end_odometer)
@@ -661,12 +778,23 @@ class Trip:
         result["endTime"] = self.end_time.isoformat()
         result["maxSpeed"] = to_float(self.max_speed)
         result["spentFuel"] = to_float(self.spent_fuel)
-        result["startAddress"] = from_none(self.start_address)
         result["startLat"] = to_float(self.start_lat)
         result["startLon"] = to_float(self.start_lon)
         result["startOdometer"] = to_float(self.start_odometer)
         result["startPositionId"] = from_int(self.start_position_id)
         result["startTime"] = self.start_time.isoformat()
+        result["driverName"] = from_union(
+            [from_none, from_str], self.driver_name
+        )
+        result["driverUniqueId"] = from_union(
+            [from_int, from_none], self.driver_unique_id
+        )
+        result["endAddress"] = from_union(
+            [from_none, from_str], self.end_address
+        )
+        result["startAddress"] = from_union(
+            [from_none, from_str], self.start_address
+        )
         return result
 
 
