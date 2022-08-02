@@ -24,6 +24,17 @@ Not implemented:
 * Geofencing.
 * Global configuration, such as webhooks.
 
+### Known issues
+The [schemas](contrib/generator/schema.json) of the models haven been
+reversed-engineerd by observing responses for a small number of devices. It is
+likely that responses of other devices do not map onto the current models. For
+example, some properties are not set if they have never been configured from
+the app.
+
+Please open an issue, and provide some responses so that the schemas can be
+improved. Be sure to redact sensitive information, such as locations, unique
+identifiers and personal details.
+
 ## Usage
 ```python
 from aiobiketrax import Account
