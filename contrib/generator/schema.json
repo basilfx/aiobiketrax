@@ -35,16 +35,16 @@
           "items": {}
         },
         "phone": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "model": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "contact": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "category": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "disabled": {
           "type": "boolean"
@@ -167,7 +167,6 @@
         "colour",
         "engine",
         "frameNumber",
-        "insurance",
         "manufacturer",
         "model",
         "price",
@@ -228,13 +227,13 @@
           "type": "number"
         },
         "address": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "accuracy": {
           "type": "number"
         },
         "network": {
-          "type": "null"
+          "type": ["null", "string"]
         }
       },
       "required": [
@@ -455,7 +454,7 @@
           "format": "date-time"
         },
         "subscriptionId": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "category": {
           "type": "string"
