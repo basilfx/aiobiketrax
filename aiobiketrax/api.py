@@ -214,7 +214,9 @@ class TraccarApi:
             "reports/trips",
             params={
                 "deviceId": device_id,
-                "from": time.strftime("%Y-%m-%dT%H:%M:%SZ", from_date.timetuple()),
+                "from": time.strftime(
+                    "%Y-%m-%dT%H:%M:%SZ", from_date.timetuple()
+                ),
                 "to": time.strftime("%Y-%m-%dT%H:%M:%SZ", to_date.timetuple()),
             },
         )
@@ -253,7 +255,6 @@ class TraccarApi:
             response.raise_for_status()
 
             json = await response.json()
-
 
             if LOG_RESPONSES:
                 _LOGGER.debug(json)
