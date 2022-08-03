@@ -20,6 +20,7 @@ class Account:
     _devices: dict[int, models.Device]
     _positions: dict[int, models.Position]
     _subscriptions: dict[str, models.Subscription]
+    _trips: dict[int, models.Trip]
 
     def __init__(
         self, username: str, password: str, session: aiohttp.ClientSession
@@ -39,6 +40,7 @@ class Account:
         self._devices = {}
         self._positions = {}
         self._subscriptions = {}
+        self._trips = {}
 
         self._update_task = None
 
@@ -168,11 +170,13 @@ class Device:
             self._device.unique_id
         )
 
-    async def update_trips(self) -> None:
+    async def update_trip(self) -> None:
         """
-        Update the trips information of the device.
+        Update the last trip information of the device. Trip is None, if none is found in the last week.
         """
-        pass
+        self._account._trips[
+            self._id
+        ] = await self._account.traccar_api.get_trip(self._id)
 
     async def set_guarded(self, guarded: bool) -> None:
         if guarded:
@@ -222,6 +226,11 @@ class Device:
         available (yet).
         """
         return self._account._subscriptions.get(self._id)
+
+    @property
+    def _trip(self) -> Optional[models.Trip]:
+        """Get the trip. Can be `None` if no trip data is available yet."""
+        return self._account._trips.get(self._id)
 
     @property
     def id(self) -> int:
@@ -327,3 +336,8 @@ class Device:
     @property
     def status(self) -> str:
         return self._device.status
+
+    @property
+    def trip(self) -> Optional[models.Trip]:
+        """Get the trip."""
+        return self._trip
