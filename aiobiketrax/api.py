@@ -1,5 +1,6 @@
 import logging
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 from decimal import InvalidOperation
 from typing import Any, AsyncIterable, Optional, Union
 
@@ -210,15 +211,27 @@ class TraccarApi:
             A list of trips.
         """
         response = await self._get(
-            "trips",
+            "reports/trips",
             params={
-                "device_id": device_id,
-                "from": from_date.isoformat(),
-                "to": to_date.isoformat(),
+                "deviceId": device_id,
+                "from": time.strftime("%Y-%m-%dT%H:%M:%SZ", from_date.timetuple()),
+                "to": time.strftime("%Y-%m-%dT%H:%M:%SZ", to_date.timetuple()),
             },
         )
 
         return [models.trip_from_dict(trip) for trip in response]
+
+    async def get_trip(self, device_id: str) -> models.Trip | None:
+        """Get the last trip in the last week or None using a filter.
+        Args:
+            device_id: The filter for device identifier.
+        Returns:
+            The last trip in the last week or None.
+        """
+        trips = await self.get_trips(
+            device_id, datetime.now() - timedelta(days=7), datetime.now()
+        )
+        return trips[-1] if trips else None
 
     async def _get(self, endpoint, params=None) -> dict:
         while True:
@@ -240,6 +253,7 @@ class TraccarApi:
             response.raise_for_status()
 
             json = await response.json()
+
 
             if LOG_RESPONSES:
                 _LOGGER.debug(json)
