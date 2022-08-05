@@ -101,16 +101,6 @@
           "type": "boolean"
         }
       },
-      "required": [
-        "alarm",
-        "autoGuard",
-        "geofenceRadius",
-        "guardType",
-        "guarded",
-        "lastAlarm",
-        "passport",
-        "trialEnd"
-      ],
       "title": "DeviceAttributes"
     },
     "Passport": {
@@ -163,17 +153,6 @@
           "type": "string"
         }
       },
-      "required": [
-        "bikePictures",
-        "bikeType",
-        "colour",
-        "engine",
-        "frameNumber",
-        "manufacturer",
-        "model",
-        "price",
-        "receiptPictures"
-      ],
       "title": "Passport"
     },
     "Position": {
@@ -298,16 +277,6 @@
           "type": "integer"
         }
       },
-      "required": [
-        "batteryLevel",
-        "charge",
-        "distance",
-        "hours",
-        "ignition",
-        "motion",
-        "status",
-        "totalDistance"
-      ],
       "title": "PositionAttributes"
     },
     "Session": {
@@ -438,14 +407,6 @@
           "type": "string"
         }
       },
-      "required": [
-        "appEnvironment",
-        "appPackage",
-        "appVersion",
-        "fcmTokens",
-        "locale",
-        "sendAnalytics"
-      ],
       "title": "SessionAttributes"
     },
     "Subscription": {
