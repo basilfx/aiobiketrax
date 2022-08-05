@@ -244,7 +244,7 @@ class Device:
         return self._id in self._device
 
     @property
-    def is_alarm_triggered(self) -> bool:
+    def is_alarm_triggered(self) -> Optional[bool]:
         return self._device.attributes.alarm
 
     @property
@@ -252,15 +252,15 @@ class Device:
         return not self._device.disabled
 
     @property
-    def is_stolen(self) -> bool:
+    def is_stolen(self) -> Optional[bool]:
         return self._device.attributes.stolen
 
     @property
-    def is_guarded(self) -> bool:
+    def is_guarded(self) -> Optional[bool]:
         return self._device.attributes.guarded
 
     @property
-    def is_auto_guarded(self) -> bool:
+    def is_auto_guarded(self) -> Optional[bool]:
         return self._device.attributes.auto_guard
 
     @property
