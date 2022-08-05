@@ -139,18 +139,14 @@
           "type": "array",
           "items": {
             "type": "string",
-            "format": "uri",
-            "qt-uri-protocols": ["https"],
-            "qt-uri-extensions": [".jpeg"]
+            "format": "uri"
           }
         },
         "receiptPictures": {
           "type": "array",
           "items": {
             "type": "string",
-            "format": "uri",
-            "qt-uri-protocols": ["https"],
-            "qt-uri-extensions": [".jpeg"]
+            "format": "uri"
           }
         },
         "frameNumber": {
