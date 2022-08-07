@@ -103,7 +103,7 @@ class Account:
                 _LOGGER.debug("Websocket connection terminated gracefully.")
             except aiohttp.ClientError as e:
                 _LOGGER.exception(
-                    "Exception while reading from websocket, error counter is %d.",
+                    "Client error while reading from websocket, error counter is %d.",
                     errors,
                     exc_info=e,
                 )
@@ -113,6 +113,14 @@ class Account:
 
                     errors += 1
                     asyncio.sleep((8 if errors > 8 else errors) ** 2)
+            except Exception as e:
+                _LOGGER.exception(
+                    "Unhandled exception while reading from websocket.",
+                    errors,
+                    exc_info=e,
+                )
+
+                raise
 
     @property
     def devices(self) -> list["Device"]:
