@@ -90,9 +90,7 @@ class Passport:
     @staticmethod
     def from_dict(obj: Any) -> "Passport":
         assert isinstance(obj, dict)
-        price = from_union(
-            [from_none, lambda x: int(from_str(x))], obj.get("price")
-        )
+        price = from_union([from_none, lambda x: int(from_str(x))], obj.get("price"))
         bike_pictures = from_union(
             [lambda x: from_list(from_str, x), from_none],
             obj.get("bikePictures"),
@@ -100,13 +98,9 @@ class Passport:
         bike_type = from_union([from_str, from_none], obj.get("bikeType"))
         colour = from_union([from_str, from_none], obj.get("colour"))
         engine = from_union([from_str, from_none], obj.get("engine"))
-        frame_number = from_union(
-            [from_str, from_none], obj.get("frameNumber")
-        )
+        frame_number = from_union([from_str, from_none], obj.get("frameNumber"))
         insurance = from_union([from_bool, from_none], obj.get("insurance"))
-        manufacturer = from_union(
-            [from_str, from_none], obj.get("manufacturer")
-        )
+        manufacturer = from_union([from_str, from_none], obj.get("manufacturer"))
         model = from_union([from_str, from_none], obj.get("model"))
         receipt_pictures = from_union(
             [lambda x: from_list(from_str, x), from_none],
@@ -138,9 +132,7 @@ class Passport:
         result["price"] = from_union(
             [
                 lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                lambda x: from_str(
-                    (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                ),
+                lambda x: from_str((lambda x: str((lambda x: is_type(int, x))(x)))(x)),
             ],
             self.price,
         )
@@ -150,15 +142,9 @@ class Passport:
         result["bikeType"] = from_union([from_str, from_none], self.bike_type)
         result["colour"] = from_union([from_str, from_none], self.colour)
         result["engine"] = from_union([from_str, from_none], self.engine)
-        result["frameNumber"] = from_union(
-            [from_str, from_none], self.frame_number
-        )
-        result["insurance"] = from_union(
-            [from_bool, from_none], self.insurance
-        )
-        result["manufacturer"] = from_union(
-            [from_str, from_none], self.manufacturer
-        )
+        result["frameNumber"] = from_union([from_str, from_none], self.frame_number)
+        result["insurance"] = from_union([from_bool, from_none], self.insurance)
+        result["manufacturer"] = from_union([from_str, from_none], self.manufacturer)
         result["model"] = from_union([from_str, from_none], self.model)
         result["receiptPictures"] = from_union(
             [lambda x: from_list(from_str, x), from_none],
@@ -190,15 +176,11 @@ class DeviceAttributes:
         assert isinstance(obj, dict)
         alarm = from_union([from_bool, from_none], obj.get("alarm"))
         auto_guard = from_union([from_bool, from_none], obj.get("autoGuard"))
-        geofence_radius = from_union(
-            [from_int, from_none], obj.get("geofenceRadius")
-        )
+        geofence_radius = from_union([from_int, from_none], obj.get("geofenceRadius"))
         guarded = from_union([from_bool, from_none], obj.get("guarded"))
         guard_type = from_union([from_str, from_none], obj.get("guardType"))
         last_alarm = from_union([from_int, from_none], obj.get("lastAlarm"))
-        passport = from_union(
-            [Passport.from_dict, from_none], obj.get("passport")
-        )
+        passport = from_union([Passport.from_dict, from_none], obj.get("passport"))
         stolen = from_union([from_bool, from_none], obj.get("stolen"))
         trial_end = from_union([from_datetime, from_none], obj.get("trialEnd"))
         return DeviceAttributes(
@@ -216,19 +198,13 @@ class DeviceAttributes:
     def to_dict(self) -> dict:
         result: dict = {}
         result["alarm"] = from_union([from_bool, from_none], self.alarm)
-        result["autoGuard"] = from_union(
-            [from_bool, from_none], self.auto_guard
-        )
+        result["autoGuard"] = from_union([from_bool, from_none], self.auto_guard)
         result["geofenceRadius"] = from_union(
             [from_int, from_none], self.geofence_radius
         )
         result["guarded"] = from_union([from_bool, from_none], self.guarded)
-        result["guardType"] = from_union(
-            [from_str, from_none], self.guard_type
-        )
-        result["lastAlarm"] = from_union(
-            [from_int, from_none], self.last_alarm
-        )
+        result["guardType"] = from_union([from_str, from_none], self.guard_type)
+        result["lastAlarm"] = from_union([from_int, from_none], self.last_alarm)
         result["passport"] = from_union(
             [lambda x: to_class(Passport, x), from_none], self.passport
         )
@@ -328,9 +304,7 @@ class PositionAttributes:
         assert isinstance(obj, dict)
         alarm = from_union([from_str, from_none], obj.get("alarm"))
         armed = from_union([from_bool, from_none], obj.get("armed"))
-        battery_level = from_union(
-            [from_int, from_none], obj.get("batteryLevel")
-        )
+        battery_level = from_union([from_int, from_none], obj.get("batteryLevel"))
         charge = from_union([from_bool, from_none], obj.get("charge"))
         distance = from_union([from_float, from_none], obj.get("distance"))
         hours = from_union([from_int, from_none], obj.get("hours"))
@@ -338,9 +312,7 @@ class PositionAttributes:
         index = from_union([from_int, from_none], obj.get("index"))
         motion = from_union([from_bool, from_none], obj.get("motion"))
         status = from_union([from_int, from_none], obj.get("status"))
-        total_distance = from_union(
-            [from_float, from_none], obj.get("totalDistance")
-        )
+        total_distance = from_union([from_float, from_none], obj.get("totalDistance"))
         return PositionAttributes(
             alarm,
             armed,
@@ -359,9 +331,7 @@ class PositionAttributes:
         result: dict = {}
         result["alarm"] = from_union([from_str, from_none], self.alarm)
         result["armed"] = from_union([from_bool, from_none], self.armed)
-        result["batteryLevel"] = from_union(
-            [from_int, from_none], self.battery_level
-        )
+        result["batteryLevel"] = from_union([from_int, from_none], self.battery_level)
         result["charge"] = from_union([from_bool, from_none], self.charge)
         result["distance"] = from_union([to_float, from_none], self.distance)
         result["hours"] = from_union([from_int, from_none], self.hours)
@@ -369,9 +339,7 @@ class PositionAttributes:
         result["index"] = from_union([from_int, from_none], self.index)
         result["motion"] = from_union([from_bool, from_none], self.motion)
         result["status"] = from_union([from_int, from_none], self.status)
-        result["totalDistance"] = from_union(
-            [to_float, from_none], self.total_distance
-        )
+        result["totalDistance"] = from_union([to_float, from_none], self.total_distance)
         return result
 
 
@@ -478,18 +446,14 @@ class SessionAttributes:
     @staticmethod
     def from_dict(obj: Any) -> "SessionAttributes":
         assert isinstance(obj, dict)
-        app_environment = from_union(
-            [from_str, from_none], obj.get("appEnvironment")
-        )
+        app_environment = from_union([from_str, from_none], obj.get("appEnvironment"))
         app_package = from_union([from_str, from_none], obj.get("appPackage"))
         app_version = from_union([from_str, from_none], obj.get("appVersion"))
         fcm_tokens = from_union(
             [lambda x: from_list(from_str, x), from_none], obj.get("fcmTokens")
         )
         locale = from_union([from_str, from_none], obj.get("locale"))
-        send_analytics = from_union(
-            [from_bool, from_none], obj.get("sendAnalytics")
-        )
+        send_analytics = from_union([from_bool, from_none], obj.get("sendAnalytics"))
         return SessionAttributes(
             app_environment,
             app_package,
@@ -504,12 +468,8 @@ class SessionAttributes:
         result["appEnvironment"] = from_union(
             [from_str, from_none], self.app_environment
         )
-        result["appPackage"] = from_union(
-            [from_str, from_none], self.app_package
-        )
-        result["appVersion"] = from_union(
-            [from_str, from_none], self.app_version
-        )
+        result["appPackage"] = from_union([from_str, from_none], self.app_package)
+        result["appVersion"] = from_union([from_str, from_none], self.app_version)
         result["fcmTokens"] = from_union(
             [lambda x: from_list(from_str, x), from_none], self.fcm_tokens
         )
@@ -657,9 +617,7 @@ class Subscription:
         trial_end = from_datetime(obj.get("trialEnd"))
         unique_id = from_str(obj.get("uniqueId"))
         updated_at = from_datetime(obj.get("updatedAt"))
-        subscription_id = from_union(
-            [from_none, from_str], obj.get("subscriptionId")
-        )
+        subscription_id = from_union([from_none, from_str], obj.get("subscriptionId"))
         return Subscription(
             category,
             created_at,
@@ -733,13 +691,9 @@ class Trip:
         start_position_id = from_int(obj.get("startPositionId"))
         start_time = from_datetime(obj.get("startTime"))
         driver_name = from_union([from_none, from_str], obj.get("driverName"))
-        driver_unique_id = from_union(
-            [from_int, from_none], obj.get("driverUniqueId")
-        )
+        driver_unique_id = from_union([from_int, from_none], obj.get("driverUniqueId"))
         end_address = from_union([from_none, from_str], obj.get("endAddress"))
-        start_address = from_union(
-            [from_none, from_str], obj.get("startAddress")
-        )
+        start_address = from_union([from_none, from_str], obj.get("startAddress"))
         return Trip(
             average_speed,
             device_id,
@@ -783,18 +737,12 @@ class Trip:
         result["startOdometer"] = to_float(self.start_odometer)
         result["startPositionId"] = from_int(self.start_position_id)
         result["startTime"] = self.start_time.isoformat()
-        result["driverName"] = from_union(
-            [from_none, from_str], self.driver_name
-        )
+        result["driverName"] = from_union([from_none, from_str], self.driver_name)
         result["driverUniqueId"] = from_union(
             [from_int, from_none], self.driver_unique_id
         )
-        result["endAddress"] = from_union(
-            [from_none, from_str], self.end_address
-        )
-        result["startAddress"] = from_union(
-            [from_none, from_str], self.start_address
-        )
+        result["endAddress"] = from_union([from_none, from_str], self.end_address)
+        result["startAddress"] = from_union([from_none, from_str], self.start_address)
         return result
 
 
