@@ -181,7 +181,7 @@ class Device:
             await self._account.admin_api.post_disarm(self._device.unique_id)
 
         # Update guarded state optimistically.
-        self._device.attributes.guarded = True
+        self._device.attributes.guarded = guarded
 
     async def set_stolen(self, stolen: bool) -> None:
         device = models.Device.from_dict(self._device.to_dict())
