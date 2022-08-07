@@ -54,7 +54,7 @@ async with aiohttp.ClientSession() as session:
 ```
 
 ## Contributing
-See the ['CONTRIBUTING.md'](CONTRIBUTING.md) file.
+See the [`CONTRIBUTING.md`](CONTRIBUTING.md) file.
 
 ## License
 See the [`LICENSE.md`](LICENSE.md) file (MIT license).

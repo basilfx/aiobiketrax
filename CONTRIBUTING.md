@@ -7,6 +7,8 @@ A few things to pay attention to:
 - Dependencies are managed using [poetry](https://python-poetry.org/).
 - Code is formatted using [Black](https://github.com/psf/black) and imports are
   sorted using [isort](https://pycqa.github.io/isort/).
+- Documentation conforms to the
+  [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html#doc-function-args).
 - Your branch is linear and logical.
 - Do not edit [models](aiobiketrax/models.py) directly. They have been
   generated using [quicktype](https://quicktype.io/). See the
