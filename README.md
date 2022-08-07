@@ -1,6 +1,9 @@
 # aiobiketrax
 Python library for interacting with the PowUnity BikeTrax GPS tracker.
 
+[![Linting](https://github.com/basilfx/aiobiketrax/actions/workflows/lint.yml/badge.svg)](https://github.com/basilfx/aiobiketrax/actions/workflows/lint.yml)
+[![PyPI version](https://badge.fury.io/py/aiobiketrax.svg)](https://badge.fury.io/py/aiobiketrax)
+
 ## Introduction
 This library is mainly written to work with a custom component for
 Home Assistant. You can find this custom component
