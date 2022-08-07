@@ -112,9 +112,7 @@ class TraccarApi:
 
         return models.device_from_dict(response)
 
-    async def put_device(
-        self, id: int, device: models.Device
-    ) -> models.Device:
+    async def put_device(self, id: int, device: models.Device) -> models.Device:
         """Update a device.
 
         Args:
@@ -176,9 +174,7 @@ class TraccarApi:
 
         return [models.position_from_dict(position) for position in response]
 
-    async def get_position(
-        self, device_id: str, id: str
-    ) -> Optional[models.Position]:
+    async def get_position(self, device_id: str, id: str) -> Optional[models.Position]:
         """Get a position by its identifier.
 
         Args:
@@ -383,9 +379,7 @@ class AdminApi:
         """
         await self._post_no_response(f"devices/{unique_id}/disarm", json={})
 
-    async def get_subscription(
-        self, unique_id: str
-    ) -> Optional[models.Subscription]:
+    async def get_subscription(self, unique_id: str) -> Optional[models.Subscription]:
         """Get the subscription.
 
         Args:

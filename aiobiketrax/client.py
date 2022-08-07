@@ -44,8 +44,7 @@ class Account:
 
     async def update_devices(self) -> None:
         self._devices = {
-            device.id: device
-            for device in await self.traccar_api.get_devices()
+            device.id: device for device in await self.traccar_api.get_devices()
         }
 
     def start(self, on_update: Callable[[], None] = None) -> None:
@@ -58,9 +57,7 @@ class Account:
         _LOGGER.debug("Starting the websocket task.")
 
         if self._update_task is None:
-            self._update_task = asyncio.create_task(
-                self.update_task(on_update)
-            )
+            self._update_task = asyncio.create_task(self.update_task(on_update))
 
     async def stop(self) -> None:
         """Stop the update task."""
@@ -172,9 +169,7 @@ class Device:
         """
         self._account._subscriptions[
             self._id
-        ] = await self._account.admin_api.get_subscription(
-            self._device.unique_id
-        )
+        ] = await self._account.admin_api.get_subscription(self._device.unique_id)
 
     async def update_trips(self) -> None:
         """
@@ -196,18 +191,18 @@ class Device:
 
         device.attributes.stolen = stolen
 
-        self._account._devices[
-            self._id
-        ] = await self._account.traccar_api.put_device(self._id, device)
+        self._account._devices[self._id] = await self._account.traccar_api.put_device(
+            self._id, device
+        )
 
     async def set_tracking_enabled(self, tracking_enabled: bool) -> None:
         device = models.Device.from_dict(self._device.to_dict())
 
         device.disabled = not tracking_enabled
 
-        self._account._devices[
-            self._id
-        ] = await self._account.traccar_api.put_device(self._id, device)
+        self._account._devices[self._id] = await self._account.traccar_api.put_device(
+            self._id, device
+        )
 
     @property
     def _device(self) -> models.Device:
