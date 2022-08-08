@@ -90,7 +90,7 @@ class TraccarApi:
         self.session = session
 
     async def get_devices(self) -> list[models.Device]:
-        """_summary_
+        """Get all devices.
 
         Returns:
             A list of devices.
