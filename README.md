@@ -36,6 +36,8 @@ improved. Be sure to redact sensitive information, such as locations, unique
 identifiers and personal details.
 
 ## Usage
+
+### In code
 ```python
 from aiobiketrax import Account
 
@@ -52,6 +54,10 @@ async with aiohttp.ClientSession() as session:
     for device in account.devices:
         print(device.name)
 ```
+
+### CLI
+For demonstration and testing purposes, one can use the CLI as well. If you
+have the package installed, use `biketrax --help` command to get started.
 
 ## Contributing
 See the [`CONTRIBUTING.md`](CONTRIBUTING.md) file.
