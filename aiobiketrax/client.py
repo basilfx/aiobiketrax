@@ -236,7 +236,7 @@ class Device:
 
     @property
     def is_deleted(self) -> bool:
-        return self._device is not None
+        return self._device is None
 
     @property
     def is_alarm_triggered(self) -> Optional[bool]:
