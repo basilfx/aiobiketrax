@@ -1,13 +1,20 @@
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Callable, Optional, final
 
 import aiohttp
+from dateutil.tz import tzutc
 
 from . import api, models
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _to_kmh(value: float) -> float:
+    """Convert a value in knots to kilometers per hour."""
+
+    return value * 1.85200
 
 
 @final
@@ -20,6 +27,8 @@ class Account:
     _devices: dict[int, models.Device]
     _positions: dict[int, models.Position]
     _subscriptions: dict[str, models.Subscription]
+    _trips: dict[str, dict[tuple[datetime, datetime], models.Trip]]
+    _sorted_trips: dict[str, list[models.Trip]]
 
     def __init__(
         self, username: str, password: str, session: aiohttp.ClientSession
@@ -39,6 +48,8 @@ class Account:
         self._devices = {}
         self._positions = {}
         self._subscriptions = {}
+        self._trips = {}
+        self._sorted_trips = {}
 
         self._update_task = None
 
@@ -134,7 +145,8 @@ class Account:
 class Device:
     """
     A `Device` instance is a view of `models.Device` and `models.Position`. It
-    retrieves the data from an `Account` instance using a device identifier.
+    retrieves the latest version of the data from an `Account` instance using a
+    device identifier.
     """
 
     # Account instance.
@@ -171,11 +183,38 @@ class Device:
             self._id
         ] = await self._account.admin_api.get_subscription(self._device.unique_id)
 
-    async def update_trips(self) -> None:
+    async def update_trips(
+        self, from_date: datetime = None, to_date: datetime = None
+    ) -> None:
         """
         Update the trips information of the device.
+
+        Args:
+            from_date: The from filter.
+            to_date: The to filter.
+
+        Raises:
+            ValueError: if the `from_date` or `to_date` do not include timezone
+                information.
         """
-        pass
+
+        if to_date is None:
+            to_date = datetime.now(tzutc())
+
+        if from_date is None:
+            from_date = to_date - timedelta(days=7)
+
+        trips = await self._account.traccar_api.get_trips(self._id, from_date, to_date)
+
+        if self._id not in self._account._trips:
+            self._account._trips[self._id] = {}
+
+        self._account._trips[self._id].update(
+            {(trip.start_time, trip.end_time): trip for trip in trips}
+        )
+        self._account._sorted_trips[self._id] = sorted(
+            self._account._trips[self._id].values(), key=lambda t: t.start_time
+        )
 
     async def set_guarded(self, guarded: bool) -> None:
         if guarded:
@@ -225,6 +264,20 @@ class Device:
         available (yet).
         """
         return self._account._subscriptions.get(self._id)
+
+    @property
+    def _trips(self) -> dict[tuple[datetime, datetime], models.Trip]:
+        """
+        Get the trips as dictionary.
+        """
+        return self._account._trips.get(self._id, {})
+
+    @property
+    def _sorted_trips(self) -> list[models.Trip]:
+        """
+        Get the trips sorted by start time.
+        """
+        return self._account._sorted_trips.get(self._id, [])
 
     @property
     def id(self) -> int:
@@ -287,11 +340,11 @@ class Device:
         return self._position.accuracy
 
     @property
-    def speed(self) -> Optional[int]:
+    def speed(self) -> Optional[float]:
         if not self._position:
             return None
 
-        return self._position.speed
+        return _to_kmh(self._position.speed)
 
     @property
     def course(self) -> Optional[float]:
@@ -330,3 +383,97 @@ class Device:
     @property
     def status(self) -> str:
         return self._device.status
+
+    @property
+    def trips(self) -> list["Trip"]:
+        return [
+            Trip(self, (trip.start_time, trip.end_time)) for trip in self._sorted_trips
+        ]
+
+
+@final
+class Trip:
+    """
+    A `Trip` instance is a view of `models.Trip`. It retrieves the latest
+    version of the data from a `Device` instance using a key that consists of
+    the start time and end time of a trip.
+    """
+
+    # Device instance.
+    _device: Device
+
+    # Trip unique key.
+    _key: tuple[datetime, datetime]
+
+    def __init__(self, device: Device, key: tuple[datetime, datetime]) -> None:
+        """Construct a new instance.
+
+        Args:
+            device: The `Device` instance.
+            key: The unique key of the instance.
+        """
+        self._device = device
+        self._key = key
+
+    @property
+    def _trip(self) -> models.Trip:
+        """
+        Get the trip.
+        """
+        return self._device._trips[self._key]
+
+    @property
+    def key(self) -> tuple[datetime, datetime]:
+        return self._key
+
+    @property
+    def is_deleted(self) -> bool:
+        return self._trip is None
+
+    @property
+    def distance(self) -> float:
+        return self._trip.distance
+
+    @property
+    def duration(self) -> timedelta:
+        return timedelta(milliseconds=self._trip.duration)
+
+    @property
+    def end_latitude(self) -> float:
+        return self._trip.end_lat
+
+    @property
+    def end_longitude(self) -> float:
+        return self._trip.end_lon
+
+    @property
+    def end_odometer(self) -> float:
+        return self._trip.end_odometer
+
+    @property
+    def end_time(self) -> datetime:
+        return self._trip.end_time
+
+    @property
+    def average_speed(self) -> float:
+        return _to_kmh(self._trip.average_speed)
+
+    @property
+    def max_speed(self) -> float:
+        return _to_kmh(self._trip.max_speed)
+
+    @property
+    def start_latitude(self) -> float:
+        return self._trip.start_lat
+
+    @property
+    def start_longitude(self) -> float:
+        return self._trip.start_lon
+
+    @property
+    def start_odometer(self) -> float:
+        return self._trip.start_odometer
+
+    @property
+    def start_time(self) -> datetime:
+        return self._trip.start_time
