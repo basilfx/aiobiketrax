@@ -293,7 +293,7 @@
           "type": "string"
         },
         "login": {
-          "type": "null"
+          "type": ["null", "string"]
         },
         "email": {
           "type": "string"
