@@ -92,8 +92,7 @@ class Passport:
         assert isinstance(obj, dict)
         price = from_union([from_none, lambda x: int(from_str(x))], obj.get("price"))
         bike_pictures = from_union(
-            [lambda x: from_list(from_str, x), from_none],
-            obj.get("bikePictures"),
+            [lambda x: from_list(from_str, x), from_none], obj.get("bikePictures")
         )
         bike_type = from_union([from_str, from_none], obj.get("bikeType"))
         colour = from_union([from_str, from_none], obj.get("colour"))
@@ -103,8 +102,7 @@ class Passport:
         manufacturer = from_union([from_str, from_none], obj.get("manufacturer"))
         model = from_union([from_str, from_none], obj.get("model"))
         receipt_pictures = from_union(
-            [lambda x: from_list(from_str, x), from_none],
-            obj.get("receiptPictures"),
+            [lambda x: from_list(from_str, x), from_none], obj.get("receiptPictures")
         )
         shifting_system_manufacturer = from_union(
             [from_str, from_none], obj.get("shiftingSystemManufacturer")
@@ -147,8 +145,7 @@ class Passport:
         result["manufacturer"] = from_union([from_str, from_none], self.manufacturer)
         result["model"] = from_union([from_str, from_none], self.model)
         result["receiptPictures"] = from_union(
-            [lambda x: from_list(from_str, x), from_none],
-            self.receipt_pictures,
+            [lambda x: from_list(from_str, x), from_none], self.receipt_pictures
         )
         result["shiftingSystemManufacturer"] = from_union(
             [from_str, from_none], self.shifting_system_manufacturer
@@ -385,8 +382,7 @@ class Position:
         valid = from_bool(obj.get("valid"))
         address = from_union([from_none, from_str], obj.get("address"))
         network = from_union(
-            [from_none, lambda x: from_dict(lambda x: x, x)],
-            obj.get("network"),
+            [from_none, lambda x: from_dict(lambda x: x, x)], obj.get("network")
         )
         return Position(
             accuracy,
@@ -491,7 +487,6 @@ class Session:
     id: int
     latitude: float
     limit_commands: bool
-    login: None
     longitude: float
     name: str
     readonly: bool
@@ -501,6 +496,7 @@ class Session:
     zoom: int
     coordinate_format: Optional[str] = None
     expiration_time: Optional[datetime] = None
+    login: Optional[str] = None
     map: Optional[str] = None
     password: Optional[str] = None
     phone: Optional[str] = None
@@ -518,7 +514,6 @@ class Session:
         id = from_int(obj.get("id"))
         latitude = from_float(obj.get("latitude"))
         limit_commands = from_bool(obj.get("limitCommands"))
-        login = from_none(obj.get("login"))
         longitude = from_float(obj.get("longitude"))
         name = from_str(obj.get("name"))
         readonly = from_bool(obj.get("readonly"))
@@ -532,6 +527,7 @@ class Session:
         expiration_time = from_union(
             [from_datetime, from_none], obj.get("expirationTime")
         )
+        login = from_union([from_none, from_str], obj.get("login"))
         map = from_union([from_none, from_str], obj.get("map"))
         password = from_union([from_none, from_str], obj.get("password"))
         phone = from_union([from_none, from_str], obj.get("phone"))
@@ -546,7 +542,6 @@ class Session:
             id,
             latitude,
             limit_commands,
-            login,
             longitude,
             name,
             readonly,
@@ -556,6 +551,7 @@ class Session:
             zoom,
             coordinate_format,
             expiration_time,
+            login,
             map,
             password,
             phone,
@@ -573,7 +569,6 @@ class Session:
         result["id"] = from_int(self.id)
         result["latitude"] = to_float(self.latitude)
         result["limitCommands"] = from_bool(self.limit_commands)
-        result["login"] = from_none(self.login)
         result["longitude"] = to_float(self.longitude)
         result["name"] = from_str(self.name)
         result["readonly"] = from_bool(self.readonly)
@@ -587,6 +582,7 @@ class Session:
         result["expirationTime"] = from_union(
             [lambda x: x.isoformat(), from_none], self.expiration_time
         )
+        result["login"] = from_union([from_none, from_str], self.login)
         result["map"] = from_union([from_none, from_str], self.map)
         result["password"] = from_union([from_none, from_str], self.password)
         result["phone"] = from_union([from_none, from_str], self.phone)
