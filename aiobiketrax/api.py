@@ -7,6 +7,7 @@ import aiohttp
 import jwt
 from auth0.v3.asyncify import asyncify
 from auth0.v3.authentication import Database
+from dateutil.tz import tzutc
 
 from . import models
 from .consts import API_ADMIN_ENDPOINT, API_CLIENT_ID, API_TRACCAR_ENDPOINT
@@ -17,6 +18,27 @@ _LOGGER = logging.getLogger(__name__)
 LOG_RESPONSES = False
 
 AsyncDatabase = asyncify(Database)
+
+
+def _to_isoformat(value: datetime) -> str:
+    """Format a `datetime` into a properly formatted timestamp for API usage.
+
+    Args:
+        value: The input timestamp.
+
+    Returns:
+        An ISO-formatted timestamp, expressed as UTC.
+
+    Raises:
+        ValueError: The input value is not timezone-aware.
+    """
+
+    if value.tzinfo is None:
+        raise ValueError("Timezone information is missing from input value.")
+
+    return (
+        value.astimezone(tzutc()).isoformat(timespec="seconds").replace("+00:00", "Z")
+    )
 
 
 class IdentityApi:
@@ -161,14 +183,18 @@ class TraccarApi:
 
         Returns:
             A list of positions.
+
+        Raises:
+            ValueError: if the `from_date` or `to_date` do not include timezone
+                information.
         """
 
         response = await self._get(
             "positions",
             params={
-                "device_id": device_id,
-                "from": from_date.isoformat(),
-                "to": to_date.isoformat(),
+                "deviceId": device_id,
+                "from": _to_isoformat(from_date),
+                "to": _to_isoformat(to_date),
             },
         )
 
@@ -204,13 +230,17 @@ class TraccarApi:
 
         Returns:
             A list of trips.
+
+        Raises:
+            ValueError: if the `from_date` or `to_date` do not include timezone
+                information.
         """
         response = await self._get(
-            "trips",
+            "reports/trips",
             params={
-                "device_id": device_id,
-                "from": from_date.isoformat(),
-                "to": to_date.isoformat(),
+                "deviceId": device_id,
+                "from": _to_isoformat(from_date),
+                "to": _to_isoformat(to_date),
             },
         )
 
