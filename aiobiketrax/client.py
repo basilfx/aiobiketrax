@@ -120,7 +120,7 @@ class Account:
                     _LOGGER.debug("Adding exponential backoff delay.")
 
                     errors += 1
-                    asyncio.sleep((8 if errors > 8 else errors) ** 2)
+                    await asyncio.sleep(2.0 ** max(errors, 6))
             except Exception as e:
                 _LOGGER.exception(
                     "Unhandled exception while reading from websocket.",
