@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.1
+Released 25 August 2022
+
+Highlights:
+* Fixed: exponential backoff for websocket disconnects.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.2.0...v0.2.1).
+
 ## v0.2.0
 Released 10 August 2022
 
