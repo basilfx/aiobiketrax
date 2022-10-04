@@ -13,9 +13,7 @@ from . import models
 from .consts import API_ADMIN_ENDPOINT, API_CLIENT_ID, API_TRACCAR_ENDPOINT
 
 _LOGGER = logging.getLogger(__name__)
-
-# Set to true to enable logging of responses.
-LOG_RESPONSES = False
+_RESPONSE_LOGGER = logging.getLogger(__name__ + ".responses")
 
 AsyncDatabase = asyncify(Database)
 
@@ -66,20 +64,28 @@ class IdentityApi:
         self.id_token = None
 
     async def login(self):
-        if self.id_token is None:
-            response = await self.database.login_async(
-                client_id=API_CLIENT_ID,
-                username=self.username,
-                password=self.password,
-                connection="Username-Password-Authentication",
-                scope="openid profile email",
-            )
+        if self.id_token is not None:
+            return
 
-            self.id_token = jwt.decode(
-                response["id_token"], options={"verify_signature": False}
-            )
+        _LOGGER.debug("Commencing login for '%s'.", self.username)
+
+        response = await self.database.login_async(
+            client_id=API_CLIENT_ID,
+            username=self.username,
+            password=self.password,
+            connection="Username-Password-Authentication",
+            scope="openid profile email",
+        )
+
+        self.id_token = jwt.decode(
+            response["id_token"], options={"verify_signature": False}
+        )
+
+        _LOGGER.debug("Retrieved JWT token.")
 
     def logout(self):
+        _LOGGER.debug("Logging out for user '%s'.", self.username)
+
         self.id_token = None
 
     @property
@@ -90,6 +96,9 @@ class IdentityApi:
 
         if self.id_token is None:
             raise InvalidOperation("Not signed in.")
+
+        if "traccarPassword" not in self.id_token:
+            raise InvalidOperation("Traccar password is missing.")
 
         return self.id_token["traccarPassword"]
 
@@ -259,6 +268,12 @@ class TraccarApi:
                 params=params,
             )
 
+            _LOGGER.debug(
+                "GET request to '%s' returned HTTP status code %d.",
+                f"{API_TRACCAR_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -267,8 +282,7 @@ class TraccarApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -286,6 +300,12 @@ class TraccarApi:
                 json=json,
             )
 
+            _LOGGER.debug(
+                "POST request to '%s' returned HTTP status code %d.",
+                f"{API_TRACCAR_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -294,8 +314,7 @@ class TraccarApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -313,6 +332,12 @@ class TraccarApi:
                 json=json,
             )
 
+            _LOGGER.debug(
+                "PUT request to '%s' returned HTTP status code %d.",
+                f"{API_TRACCAR_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -321,8 +346,7 @@ class TraccarApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -352,8 +376,7 @@ class TraccarApi:
 
                 message = message.json()
 
-                if LOG_RESPONSES:
-                    _LOGGER.debug(message)
+                _RESPONSE_LOGGER.debug(message)
 
                 if "positions" in message:
                     handled = True
@@ -436,6 +459,12 @@ class AdminApi:
                 params=params,
             )
 
+            _LOGGER.debug(
+                "GET request to '%s' returned HTTP status code %d.",
+                f"{API_ADMIN_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -444,8 +473,7 @@ class AdminApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -463,6 +491,12 @@ class AdminApi:
                 json=json,
             )
 
+            _LOGGER.debug(
+                "POST request to '%s' returned HTTP status code %d.",
+                f"{API_ADMIN_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -471,8 +505,7 @@ class AdminApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -488,6 +521,12 @@ class AdminApi:
                 },
                 data=data,
                 json=json,
+            )
+
+            _LOGGER.debug(
+                "POST request to '%s' returned HTTP status code %d.",
+                f"{API_ADMIN_ENDPOINT}/{endpoint}",
+                response.status,
             )
 
             if response.status == 401:

@@ -35,6 +35,14 @@ Please open an issue, and provide some responses so that the schemas can be
 improved. Be sure to redact sensitive information, such as locations, unique
 identifiers and personal details.
 
+### Debugging
+In case of issues, it is possible to enable logging in your application for the
+following loggers:
+
+* `aiobiketrax.api` - API logging.
+* `aiobiketrax.api.responses` - Additional API response logging.
+* `aiobiketrax.api.client` - Client interaction logging.
+
 ## Usage
 
 ### In code
