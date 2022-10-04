@@ -260,6 +260,12 @@ class TraccarApi:
                 params=params,
             )
 
+            _LOGGER.debug(
+                "GET request to '%s' returned HTTP status code %d.",
+                f"{API_TRACCAR_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -286,6 +292,12 @@ class TraccarApi:
                 json=json,
             )
 
+            _LOGGER.debug(
+                "POST request to '%s' returned HTTP status code %d.",
+                f"{API_TRACCAR_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -310,6 +322,12 @@ class TraccarApi:
                 ),
                 data=data,
                 json=json,
+            )
+
+            _LOGGER.debug(
+                "PUT request to '%s' returned HTTP status code %d.",
+                f"{API_TRACCAR_ENDPOINT}/{endpoint}",
+                response.status,
             )
 
             if response.status == 401:
@@ -433,6 +451,12 @@ class AdminApi:
                 params=params,
             )
 
+            _LOGGER.debug(
+                "GET request to '%s' returned HTTP status code %d.",
+                f"{API_ADMIN_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -459,6 +483,12 @@ class AdminApi:
                 json=json,
             )
 
+            _LOGGER.debug(
+                "POST request to '%s' returned HTTP status code %d.",
+                f"{API_ADMIN_ENDPOINT}/{endpoint}",
+                response.status,
+            )
+
             if response.status == 401:
                 self.identity_api.logout()
                 continue
@@ -483,6 +513,12 @@ class AdminApi:
                 },
                 data=data,
                 json=json,
+            )
+
+            _LOGGER.debug(
+                "POST request to '%s' returned HTTP status code %d.",
+                f"{API_ADMIN_ENDPOINT}/{endpoint}",
+                response.status,
             )
 
             if response.status == 401:
