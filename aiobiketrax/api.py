@@ -89,6 +89,9 @@ class IdentityApi:
         if self.id_token is None:
             raise InvalidOperation("Not signed in.")
 
+        if "traccarPassword" not in self.id_token:
+            raise InvalidOperation("Traccar password is missing.")
+
         return self.id_token["traccarPassword"]
 
 
