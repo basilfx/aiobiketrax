@@ -64,20 +64,28 @@ class IdentityApi:
         self.id_token = None
 
     async def login(self):
-        if self.id_token is None:
-            response = await self.database.login_async(
-                client_id=API_CLIENT_ID,
-                username=self.username,
-                password=self.password,
-                connection="Username-Password-Authentication",
-                scope="openid profile email",
-            )
+        if self.id_token is not None:
+            return
 
-            self.id_token = jwt.decode(
-                response["id_token"], options={"verify_signature": False}
-            )
+        _LOGGER.debug("Commencing login for '%s'.", self.username)
+
+        response = await self.database.login_async(
+            client_id=API_CLIENT_ID,
+            username=self.username,
+            password=self.password,
+            connection="Username-Password-Authentication",
+            scope="openid profile email",
+        )
+
+        self.id_token = jwt.decode(
+            response["id_token"], options={"verify_signature": False}
+        )
+
+        _LOGGER.debug("Retrieved JWT token.")
 
     def logout(self):
+        _LOGGER.debug("Logging out for user '%s'.", self.username)
+
         self.id_token = None
 
     @property
