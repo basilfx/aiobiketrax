@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import logging
 import pprint
 import sys
 
@@ -16,6 +17,9 @@ def parse_arguments(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "-p", "--password", action="store", required=True, help="password for login"
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="enable debug logging"
     )
 
     sub_parsers = parser.add_subparsers(dest="command", help="command to execute")
@@ -36,6 +40,10 @@ def parse_arguments(argv: list[str]) -> argparse.Namespace:
 
     # Parse command line
     return parser.parse_args(argv[1:])
+
+
+def setup_logging() -> None:
+    logging.basicConfig(level=logging.DEBUG)
 
 
 async def command_devices(arguments: argparse.Namespace):
@@ -150,6 +158,9 @@ async def main(argv: list[str]) -> int:
     """Application entry point."""
 
     arguments = parse_arguments(argv)
+
+    if arguments.verbose:
+        setup_logging()
 
     if arguments.command == "devices":
         await command_devices(arguments)
