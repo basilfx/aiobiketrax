@@ -13,9 +13,7 @@ from . import models
 from .consts import API_ADMIN_ENDPOINT, API_CLIENT_ID, API_TRACCAR_ENDPOINT
 
 _LOGGER = logging.getLogger(__name__)
-
-# Set to true to enable logging of responses.
-LOG_RESPONSES = False
+_RESPONSE_LOGGER = logging.getLogger(__name__ + ".responses")
 
 AsyncDatabase = asyncify(Database)
 
@@ -267,8 +265,7 @@ class TraccarApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -294,8 +291,7 @@ class TraccarApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -321,8 +317,7 @@ class TraccarApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -352,8 +347,7 @@ class TraccarApi:
 
                 message = message.json()
 
-                if LOG_RESPONSES:
-                    _LOGGER.debug(message)
+                _RESPONSE_LOGGER.debug(message)
 
                 if "positions" in message:
                     handled = True
@@ -444,8 +438,7 @@ class AdminApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
@@ -471,8 +464,7 @@ class AdminApi:
 
             json = await response.json()
 
-            if LOG_RESPONSES:
-                _LOGGER.debug(json)
+            _RESPONSE_LOGGER.debug(json)
 
             return json
 
