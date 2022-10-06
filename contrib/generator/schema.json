@@ -143,14 +143,25 @@
           "type": "string"
         },
         "price": {
-          "type": "string",
-          "format": "integer"
+          "type": "string"
+        },
+        "registrationCode": {
+          "type": "string"
+        },
+        "shiftingSystemGears": {
+          "type": "string"
         },
         "shiftingSystemManufacturer": {
           "type": "string"
         },
         "shiftingSystemModel": {
           "type": "string"
+        },
+        "specialFeatures": {
+          "type": "string"
+        },
+        "used": {
+          "type": "boolean"
         }
       },
       "title": "Passport"

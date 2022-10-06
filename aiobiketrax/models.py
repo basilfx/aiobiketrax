@@ -9,13 +9,18 @@ import dateutil.parser
 T = TypeVar("T")
 
 
-def from_none(x: Any) -> Any:
-    assert x is None
-    return x
+def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
+    assert isinstance(x, list)
+    return [f(y) for y in x]
 
 
 def from_str(x: Any) -> str:
     assert isinstance(x, str)
+    return x
+
+
+def from_none(x: Any) -> Any:
+    assert x is None
     return x
 
 
@@ -28,18 +33,8 @@ def from_union(fs, x):
     assert False
 
 
-def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
-    assert isinstance(x, list)
-    return [f(y) for y in x]
-
-
 def from_bool(x: Any) -> bool:
     assert isinstance(x, bool)
-    return x
-
-
-def is_type(t: Type[T], x: Any) -> T:
-    assert isinstance(x, t)
     return x
 
 
@@ -74,7 +69,6 @@ def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
 
 @dataclass
 class Passport:
-    price: Optional[int] = None
     bike_pictures: Optional[List[str]] = None
     bike_type: Optional[str] = None
     colour: Optional[str] = None
@@ -83,14 +77,18 @@ class Passport:
     insurance: Optional[bool] = None
     manufacturer: Optional[str] = None
     model: Optional[str] = None
+    price: Optional[str] = None
     receipt_pictures: Optional[List[str]] = None
+    registration_code: Optional[str] = None
+    shifting_system_gears: Optional[str] = None
     shifting_system_manufacturer: Optional[str] = None
     shifting_system_model: Optional[str] = None
+    special_features: Optional[str] = None
+    used: Optional[bool] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Passport":
         assert isinstance(obj, dict)
-        price = from_union([from_none, lambda x: int(from_str(x))], obj.get("price"))
         bike_pictures = from_union(
             [lambda x: from_list(from_str, x), from_none], obj.get("bikePictures")
         )
@@ -101,8 +99,15 @@ class Passport:
         insurance = from_union([from_bool, from_none], obj.get("insurance"))
         manufacturer = from_union([from_str, from_none], obj.get("manufacturer"))
         model = from_union([from_str, from_none], obj.get("model"))
+        price = from_union([from_str, from_none], obj.get("price"))
         receipt_pictures = from_union(
             [lambda x: from_list(from_str, x), from_none], obj.get("receiptPictures")
+        )
+        registration_code = from_union(
+            [from_str, from_none], obj.get("registrationCode")
+        )
+        shifting_system_gears = from_union(
+            [from_str, from_none], obj.get("shiftingSystemGears")
         )
         shifting_system_manufacturer = from_union(
             [from_str, from_none], obj.get("shiftingSystemManufacturer")
@@ -110,8 +115,9 @@ class Passport:
         shifting_system_model = from_union(
             [from_str, from_none], obj.get("shiftingSystemModel")
         )
+        special_features = from_union([from_str, from_none], obj.get("specialFeatures"))
+        used = from_union([from_bool, from_none], obj.get("used"))
         return Passport(
-            price,
             bike_pictures,
             bike_type,
             colour,
@@ -120,20 +126,18 @@ class Passport:
             insurance,
             manufacturer,
             model,
+            price,
             receipt_pictures,
+            registration_code,
+            shifting_system_gears,
             shifting_system_manufacturer,
             shifting_system_model,
+            special_features,
+            used,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["price"] = from_union(
-            [
-                lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                lambda x: from_str((lambda x: str((lambda x: is_type(int, x))(x)))(x)),
-            ],
-            self.price,
-        )
         result["bikePictures"] = from_union(
             [lambda x: from_list(from_str, x), from_none], self.bike_pictures
         )
@@ -144,8 +148,15 @@ class Passport:
         result["insurance"] = from_union([from_bool, from_none], self.insurance)
         result["manufacturer"] = from_union([from_str, from_none], self.manufacturer)
         result["model"] = from_union([from_str, from_none], self.model)
+        result["price"] = from_union([from_str, from_none], self.price)
         result["receiptPictures"] = from_union(
             [lambda x: from_list(from_str, x), from_none], self.receipt_pictures
+        )
+        result["registrationCode"] = from_union(
+            [from_str, from_none], self.registration_code
+        )
+        result["shiftingSystemGears"] = from_union(
+            [from_str, from_none], self.shifting_system_gears
         )
         result["shiftingSystemManufacturer"] = from_union(
             [from_str, from_none], self.shifting_system_manufacturer
@@ -153,6 +164,10 @@ class Passport:
         result["shiftingSystemModel"] = from_union(
             [from_str, from_none], self.shifting_system_model
         )
+        result["specialFeatures"] = from_union(
+            [from_str, from_none], self.special_features
+        )
+        result["used"] = from_union([from_bool, from_none], self.used)
         return result
 
 
