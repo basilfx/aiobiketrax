@@ -326,8 +326,7 @@ def get_positions(request: web.Request):
         positions = [
             position
             for position in POSITIONS
-            if position["deviceId"] == int(device_id)
-            and position["id"] == int(id)
+            if position["deviceId"] == int(device_id) and position["id"] == int(id)
         ]
 
         return web.json_response(positions)
@@ -367,9 +366,7 @@ if __name__ == "__main__":
     aio_app.router.add_route(
         "GET", "/admin/api/subscriptions/{unique_id}", get_subscription
     )
-    aio_app.router.add_route(
-        "POST", "/admin/api/devices/{unique_id}/arm", post_arm
-    )
+    aio_app.router.add_route("POST", "/admin/api/devices/{unique_id}/arm", post_arm)
     aio_app.router.add_route(
         "POST", "/admin/api/devices/{unique_id}/disarm", post_disarm
     )
