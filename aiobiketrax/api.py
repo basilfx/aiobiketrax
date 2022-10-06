@@ -7,15 +7,57 @@ import aiohttp
 import jwt
 from auth0.v3.asyncify import asyncify
 from auth0.v3.authentication import Database
+from auth0.v3.exceptions import Auth0Error
 from dateutil.tz import tzutc
 
 from . import models
 from .consts import API_ADMIN_ENDPOINT, API_CLIENT_ID, API_TRACCAR_ENDPOINT
+from .exceptions import ApiError, AuthenticationError
 
 _LOGGER = logging.getLogger(__name__)
 _RESPONSE_LOGGER = logging.getLogger(__name__ + ".responses")
 
 AsyncDatabase = asyncify(Database)
+
+
+def throws_assertion_error(func):
+    """Decorator for handling `AssertionErrors`.
+
+    Args:
+        func: The actual method to execute.
+
+    Returns:
+        A decorated instance of `func` that catches exceptions of type
+        `AssertionError`, and wraps them in an `ApiError`.
+    """
+
+    async def wrapper(*args, **kwargs):
+        try:
+            return await func(*args, **kwargs)
+        except AssertionError as e:
+            raise ApiError("Unable to parse API response.") from e
+
+    return wrapper
+
+
+def throws_client_connection_error(func):
+    """Decorator for handling `aiohttp.client_exceptions.ClientConnectorError`.
+
+    Args:
+        func: The actual method to execute.
+
+    Returns:
+        A decorated instance of `func` that catches exceptions of type
+        `AssertionError`, and wraps them in an `ApiError`.
+    """
+
+    async def wrapper(*args, **kwargs):
+        try:
+            return await func(*args, **kwargs)
+        except aiohttp.client_exceptions.ClientConnectorError as e:
+            raise ApiError("Unable to connect to remote API.") from e
+
+    return wrapper
 
 
 def _to_isoformat(value: datetime) -> str:
@@ -69,13 +111,16 @@ class IdentityApi:
 
         _LOGGER.debug("Commencing login for '%s'.", self.username)
 
-        response = await self.database.login_async(
-            client_id=API_CLIENT_ID,
-            username=self.username,
-            password=self.password,
-            connection="Username-Password-Authentication",
-            scope="openid profile email",
-        )
+        try:
+            response = await self.database.login_async(
+                client_id=API_CLIENT_ID,
+                username=self.username,
+                password=self.password,
+                connection="Username-Password-Authentication",
+                scope="openid profile email",
+            )
+        except Auth0Error as e:
+            raise AuthenticationError("Unable to sign in.") from e
 
         self.id_token = jwt.decode(
             response["id_token"], options={"verify_signature": False}
@@ -120,16 +165,22 @@ class TraccarApi:
         self.identity_api = identity_api
         self.session = session
 
+    @throws_assertion_error
     async def get_devices(self) -> list[models.Device]:
         """Get all devices.
 
         Returns:
             A list of devices.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
         response = await self._get("devices")
 
         return [models.device_from_dict(device) for device in response]
 
+    @throws_assertion_error
     async def get_device(self, id: int) -> models.Device:
         """Get a device by its identifier.
 
@@ -138,11 +189,16 @@ class TraccarApi:
 
         Returns:
             A device.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
         response = await self._get(f"devices/{id}")
 
         return models.device_from_dict(response)
 
+    @throws_assertion_error
     async def put_device(self, id: int, device: models.Device) -> models.Device:
         """Update a device.
 
@@ -152,11 +208,16 @@ class TraccarApi:
 
         Returns:
             The updated device.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
         response = await self._put(f"devices/{id}", json=device.to_dict())
 
         return models.device_from_dict(response)
 
+    @throws_assertion_error
     async def post_session(self) -> models.Session:
         """Post a session.
 
@@ -164,6 +225,10 @@ class TraccarApi:
 
         Returns:
             A session instance.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
 
         await self.identity_api.login()
@@ -180,6 +245,7 @@ class TraccarApi:
 
         return models.session_from_dict(response)
 
+    @throws_assertion_error
     async def get_positions(
         self, device_id: str, from_date: datetime, to_date: datetime
     ) -> list[models.Position]:
@@ -194,6 +260,8 @@ class TraccarApi:
             A list of positions.
 
         Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
             ValueError: if the `from_date` or `to_date` do not include timezone
                 information.
         """
@@ -209,6 +277,7 @@ class TraccarApi:
 
         return [models.position_from_dict(position) for position in response]
 
+    @throws_assertion_error
     async def get_position(self, device_id: str, id: str) -> Optional[models.Position]:
         """Get a position by its identifier.
 
@@ -218,6 +287,10 @@ class TraccarApi:
 
         Returns:
             The position.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
 
         response = await self._get(
@@ -227,6 +300,7 @@ class TraccarApi:
         # The result is a list, but an object is more appropriate.
         return models.position_from_dict(response[0]) if response else None
 
+    @throws_assertion_error
     async def get_trips(
         self, device_id: str, from_date: datetime, to_date: datetime
     ) -> list[models.Trip]:
@@ -241,6 +315,8 @@ class TraccarApi:
             A list of trips.
 
         Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
             ValueError: if the `from_date` or `to_date` do not include timezone
                 information.
         """
@@ -255,6 +331,7 @@ class TraccarApi:
 
         return [models.trip_from_dict(trip) for trip in response]
 
+    @throws_client_connection_error
     async def _get(self, endpoint, params=None) -> dict:
         while True:
             await self.identity_api.login()
@@ -286,6 +363,7 @@ class TraccarApi:
 
             return json
 
+    @throws_client_connection_error
     async def _post(self, endpoint, data=None, json=None) -> dict:
         while True:
             await self.identity_api.login()
@@ -318,6 +396,7 @@ class TraccarApi:
 
             return json
 
+    @throws_client_connection_error
     async def _put(self, endpoint, data=None, json=None) -> dict:
         while True:
             await self.identity_api.login()
@@ -432,6 +511,7 @@ class AdminApi:
         """
         await self._post_no_response(f"devices/{unique_id}/disarm", json={})
 
+    @throws_assertion_error
     async def get_subscription(self, unique_id: str) -> Optional[models.Subscription]:
         """Get the subscription.
 
@@ -441,11 +521,16 @@ class AdminApi:
 
         Returns:
             The subscription.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
         response = await self._get(f"subscriptions/{unique_id}")
 
         return models.subscription_from_dict(response)
 
+    @throws_client_connection_error
     async def _get(self, endpoint, params=None) -> dict:
         while True:
             await self.identity_api.login()
@@ -477,6 +562,7 @@ class AdminApi:
 
             return json
 
+    @throws_client_connection_error
     async def _post(self, endpoint, data=None, json=None) -> dict:
         while True:
             await self.identity_api.login()
@@ -509,6 +595,7 @@ class AdminApi:
 
             return json
 
+    @throws_client_connection_error
     async def _post_no_response(self, endpoint, data=None, json=None) -> None:
         while True:
             await self.identity_api.login()
