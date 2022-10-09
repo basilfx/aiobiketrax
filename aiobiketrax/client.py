@@ -54,7 +54,7 @@ class Account:
         self._update_task = None
 
     async def update_devices(self) -> None:
-        _LOGGER.debug("Updating devices")
+        _LOGGER.debug("Updating devices.")
 
         self._devices = {
             device.id: device for device in await self.traccar_api.get_devices()
@@ -184,7 +184,7 @@ class Device:
         """
         Update the position information of the device.
         """
-        _LOGGER.debug("Updating positions of device %s", self._id)
+        _LOGGER.debug("Updating positions of device %s.", self._id)
 
         self._account._positions[
             self._id
@@ -196,7 +196,7 @@ class Device:
         """
         Update the subscription information of the device.
         """
-        _LOGGER.debug("Updating subscription of device %s", self._id)
+        _LOGGER.debug("Updating subscription of device %s.", self._id)
 
         self._account._subscriptions[
             self._id
@@ -217,7 +217,7 @@ class Device:
                 information.
         """
 
-        _LOGGER.debug("Updating trips of device %s", self._id)
+        _LOGGER.debug("Updating trips of device %s.", self._id)
 
         if to_date is None:
             to_date = datetime.now(tzutc())
@@ -238,7 +238,7 @@ class Device:
         )
 
     async def set_guarded(self, guarded: bool) -> None:
-        _LOGGER.debug("Setting guarded state of device %s to %s", self._id, guarded)
+        _LOGGER.debug("Setting guarded state of device %s to %s.", self._id, guarded)
 
         if guarded:
             await self._account.admin_api.post_arm(self._device.unique_id)
@@ -249,7 +249,7 @@ class Device:
         self._device.attributes.guarded = guarded
 
     async def set_stolen(self, stolen: bool) -> None:
-        _LOGGER.debug("Setting stolen state of device %s to %s", self._id, stolen)
+        _LOGGER.debug("Setting stolen state of device %s to %s.", self._id, stolen)
 
         device = models.Device.from_dict(self._device.to_dict())
 
@@ -261,7 +261,7 @@ class Device:
 
     async def set_tracking_enabled(self, tracking_enabled: bool) -> None:
         _LOGGER.debug(
-            "Setting tracking enabled state of device %s to %s",
+            "Setting tracking enabled state of device %s to %s.",
             self._id,
             tracking_enabled,
         )
