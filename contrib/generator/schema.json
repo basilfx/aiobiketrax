@@ -461,7 +461,6 @@
         "id",
         "setupFee",
         "subscriptionId",
-        "trialDuration",
         "trialEnd",
         "uniqueId",
         "updatedAt"
