@@ -432,7 +432,7 @@ class TraccarApi:
     async def create_socket(
         self,
     ) -> AsyncIterable[Union[models.Position, models.Device]]:
-        """Connect to the websocket.
+        """Connect to the Traccar WebSocket to receive live updates.
 
         Consumes messages until the connection is closed.
 
