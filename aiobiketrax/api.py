@@ -446,7 +446,7 @@ class TraccarApi:
         # Create a connection and consume all messages until reading is
         # stopped.
         async with self.session.ws_connect(
-            f"{API_TRACCAR_ENDPOINT}/socket"
+            f"{API_TRACCAR_ENDPOINT}/socket", heartbeat=60.0
         ) as websocket:
             async for message in websocket:
                 _LOGGER.debug("Received WebSocket message.")
