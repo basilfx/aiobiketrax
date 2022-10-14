@@ -54,7 +54,7 @@ class Account:
         self._update_task = None
 
     async def update_devices(self) -> None:
-        _LOGGER.debug("Updating devices")
+        _LOGGER.debug("Updating devices.")
 
         self._devices = {
             device.id: device for device in await self.traccar_api.get_devices()
@@ -64,10 +64,10 @@ class Account:
         """Start the update task.
 
         Args:
-            on_update: Callback to invoke on an update. Defaults to None.
+            on_update: Callback to invoke on an update. Defaults to `None`.
         """
 
-        _LOGGER.debug("Starting the websocket task.")
+        _LOGGER.debug("Starting the update task.")
 
         if self._update_task is None:
             self._update_task = asyncio.create_task(self.update_task(on_update))
@@ -75,7 +75,7 @@ class Account:
     async def stop(self) -> None:
         """Stop the update task."""
 
-        _LOGGER.debug("Stopping the websocket task.")
+        _LOGGER.debug("Stopping the update task.")
 
         if self._update_task:
             self._update_task.cancel()
@@ -89,48 +89,61 @@ class Account:
         """
         errors = 0
 
-        while True:
-            _LOGGER.debug("Connecting to websocket.")
+        _LOGGER.debug("Update task started.")
 
-            try:
-                async for update in self.traccar_api.create_socket():
-                    updates = False
+        try:
+            while True:
+                _LOGGER.debug("Connecting to WebSocket, error counter is %d.", errors)
 
-                    # Reset number of errors, because it connected and received
-                    # a message.
-                    errors = 0
+                try:
+                    async for update in self.traccar_api.create_socket():
+                        updates = False
 
-                    if isinstance(update, models.Position):
-                        self._positions[update.device_id] = update
-                        updates = True
-                    elif isinstance(update, models.Device):
-                        self._devices[update.id] = update
-                        updates = True
+                        # Reset number of errors, because it connected and
+                        # received a message.
+                        errors = 0
 
-                    if updates and on_update:
-                        on_update()
+                        if isinstance(update, models.Position):
+                            self._positions[update.device_id] = update
+                            updates = True
+                        elif isinstance(update, models.Device):
+                            self._devices[update.id] = update
+                            updates = True
 
-                _LOGGER.debug("Websocket connection terminated gracefully.")
-            except aiohttp.ClientError as e:
-                _LOGGER.exception(
-                    "Client error while reading from websocket, error counter is %d.",
-                    errors,
-                    exc_info=e,
-                )
+                        if updates and on_update:
+                            try:
+                                on_update()
+                            except Exception as e:
+                                _LOGGER.warning(
+                                    "Unexpected exception while invoking update "
+                                    "callback. Will continue.",
+                                    exc_info=e,
+                                )
 
-                if self._update_task is not None:
-                    _LOGGER.debug("Adding exponential backoff delay.")
+                    _LOGGER.debug("WebSocket connection terminated gracefully.")
+                except aiohttp.ClientError as e:
+                    _LOGGER.exception(
+                        "Client error while reading from WebSocket, error counter "
+                        "is %d.",
+                        errors,
+                        exc_info=e,
+                    )
 
-                    errors += 1
-                    await asyncio.sleep(2.0 ** max(errors, 6))
-            except Exception as e:
-                _LOGGER.exception(
-                    "Unhandled exception while reading from websocket.",
-                    errors,
-                    exc_info=e,
-                )
+                    if self._update_task is not None:
+                        _LOGGER.debug("Adding exponential backoff delay.")
 
-                raise
+                        errors += 1
+                        await asyncio.sleep(2.0 ** max(errors, 6))
+                except Exception as e:
+                    _LOGGER.exception(
+                        "Unhandled exception while reading from WebSocket.",
+                        errors,
+                        exc_info=e,
+                    )
+
+                    raise
+        finally:
+            _LOGGER.debug("Update task stopped.")
 
     @property
     def devices(self) -> list["Device"]:
@@ -171,7 +184,7 @@ class Device:
         """
         Update the position information of the device.
         """
-        _LOGGER.debug("Updating positions of device %s", self._id)
+        _LOGGER.debug("Updating positions of device %s.", self._id)
 
         self._account._positions[
             self._id
@@ -183,7 +196,7 @@ class Device:
         """
         Update the subscription information of the device.
         """
-        _LOGGER.debug("Updating subscription of device %s", self._id)
+        _LOGGER.debug("Updating subscription of device %s.", self._id)
 
         self._account._subscriptions[
             self._id
@@ -204,7 +217,7 @@ class Device:
                 information.
         """
 
-        _LOGGER.debug("Updating trips of device %s", self._id)
+        _LOGGER.debug("Updating trips of device %s.", self._id)
 
         if to_date is None:
             to_date = datetime.now(tzutc())
@@ -225,7 +238,7 @@ class Device:
         )
 
     async def set_guarded(self, guarded: bool) -> None:
-        _LOGGER.debug("Setting guarded state of device %s to %s", self._id, guarded)
+        _LOGGER.debug("Setting guarded state of device %s to %s.", self._id, guarded)
 
         if guarded:
             await self._account.admin_api.post_arm(self._device.unique_id)
@@ -236,7 +249,7 @@ class Device:
         self._device.attributes.guarded = guarded
 
     async def set_stolen(self, stolen: bool) -> None:
-        _LOGGER.debug("Setting stolen state of device %s to %s", self._id, stolen)
+        _LOGGER.debug("Setting stolen state of device %s to %s.", self._id, stolen)
 
         device = models.Device.from_dict(self._device.to_dict())
 
@@ -248,7 +261,7 @@ class Device:
 
     async def set_tracking_enabled(self, tracking_enabled: bool) -> None:
         _LOGGER.debug(
-            "Setting tracking enabled state of device %s to %s",
+            "Setting tracking enabled state of device %s to %s.",
             self._id,
             tracking_enabled,
         )
