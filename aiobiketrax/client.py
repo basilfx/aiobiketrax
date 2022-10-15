@@ -130,9 +130,11 @@ class Account:
                         exc_info=e,
                     )
 
+                    errors += 1
+
+                    # Only add exponential backoff delay if task has not been stopped.
                     if self._update_task is not None:
-                        sleep = 2.0 ** max(errors, 6)
-                        errors += 1
+                        sleep = 2.0 ** min(errors, 6)
 
                         _LOGGER.debug(
                             f"Adding exponential backoff delay of {sleep} seconds."
