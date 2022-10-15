@@ -9,11 +9,6 @@ import dateutil.parser
 T = TypeVar("T")
 
 
-def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
-    assert isinstance(x, list)
-    return [f(y) for y in x]
-
-
 def from_str(x: Any) -> str:
     assert isinstance(x, str)
     return x
@@ -33,6 +28,11 @@ def from_union(fs, x):
     assert False
 
 
+def from_list(f: Callable[[Any], T], x: Any) -> List[T]:
+    assert isinstance(x, list)
+    return [f(y) for y in x]
+
+
 def from_bool(x: Any) -> bool:
     assert isinstance(x, bool)
     return x
@@ -41,6 +41,11 @@ def from_bool(x: Any) -> bool:
 def from_int(x: Any) -> int:
     assert isinstance(x, int) and not isinstance(x, bool)
     return x
+
+
+def from_float(x: Any) -> float:
+    assert isinstance(x, (float, int)) and not isinstance(x, bool)
+    return float(x)
 
 
 def from_datetime(x: Any) -> datetime:
@@ -52,11 +57,6 @@ def to_class(c: Type[T], x: Any) -> dict:
     return cast(Any, x).to_dict()
 
 
-def from_float(x: Any) -> float:
-    assert isinstance(x, (float, int)) and not isinstance(x, bool)
-    return float(x)
-
-
 def to_float(x: Any) -> float:
     assert isinstance(x, float)
     return x
@@ -65,6 +65,318 @@ def to_float(x: Any) -> float:
 def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
     assert isinstance(x, dict)
     return {k: f(v) for (k, v) in x.items()}
+
+
+@dataclass
+class SessionAttributes:
+    app_environment: Optional[str] = None
+    app_package: Optional[str] = None
+    app_version: Optional[str] = None
+    fcm_tokens: Optional[List[str]] = None
+    locale: Optional[str] = None
+    send_analytics: Optional[bool] = None
+
+    @staticmethod
+    def from_dict(obj: Any) -> "SessionAttributes":
+        assert isinstance(obj, dict)
+        app_environment = from_union([from_str, from_none], obj.get("appEnvironment"))
+        app_package = from_union([from_str, from_none], obj.get("appPackage"))
+        app_version = from_union([from_str, from_none], obj.get("appVersion"))
+        fcm_tokens = from_union(
+            [lambda x: from_list(from_str, x), from_none], obj.get("fcmTokens")
+        )
+        locale = from_union([from_str, from_none], obj.get("locale"))
+        send_analytics = from_union([from_bool, from_none], obj.get("sendAnalytics"))
+        return SessionAttributes(
+            app_environment,
+            app_package,
+            app_version,
+            fcm_tokens,
+            locale,
+            send_analytics,
+        )
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["appEnvironment"] = from_union(
+            [from_str, from_none], self.app_environment
+        )
+        result["appPackage"] = from_union([from_str, from_none], self.app_package)
+        result["appVersion"] = from_union([from_str, from_none], self.app_version)
+        result["fcmTokens"] = from_union(
+            [lambda x: from_list(from_str, x), from_none], self.fcm_tokens
+        )
+        result["locale"] = from_union([from_str, from_none], self.locale)
+        result["sendAnalytics"] = from_union(
+            [from_bool, from_none], self.send_analytics
+        )
+        return result
+
+
+@dataclass
+class Session:
+    administrator: bool
+    attributes: SessionAttributes
+    device_limit: int
+    device_readonly: bool
+    disabled: bool
+    email: str
+    id: int
+    latitude: float
+    limit_commands: bool
+    longitude: float
+    name: str
+    readonly: bool
+    token: str
+    twelve_hour_format: bool
+    user_limit: int
+    zoom: int
+    coordinate_format: Optional[str] = None
+    expiration_time: Optional[datetime] = None
+    login: Optional[str] = None
+    map: Optional[str] = None
+    password: Optional[str] = None
+    phone: Optional[str] = None
+    poi_layer: Optional[str] = None
+
+    @staticmethod
+    def from_dict(obj: Any) -> "Session":
+        assert isinstance(obj, dict)
+        administrator = from_bool(obj.get("administrator"))
+        attributes = SessionAttributes.from_dict(obj.get("attributes"))
+        device_limit = from_int(obj.get("deviceLimit"))
+        device_readonly = from_bool(obj.get("deviceReadonly"))
+        disabled = from_bool(obj.get("disabled"))
+        email = from_str(obj.get("email"))
+        id = from_int(obj.get("id"))
+        latitude = from_float(obj.get("latitude"))
+        limit_commands = from_bool(obj.get("limitCommands"))
+        longitude = from_float(obj.get("longitude"))
+        name = from_str(obj.get("name"))
+        readonly = from_bool(obj.get("readonly"))
+        token = from_str(obj.get("token"))
+        twelve_hour_format = from_bool(obj.get("twelveHourFormat"))
+        user_limit = from_int(obj.get("userLimit"))
+        zoom = from_int(obj.get("zoom"))
+        coordinate_format = from_union(
+            [from_none, from_str], obj.get("coordinateFormat")
+        )
+        expiration_time = from_union(
+            [from_datetime, from_none], obj.get("expirationTime")
+        )
+        login = from_union([from_none, from_str], obj.get("login"))
+        map = from_union([from_none, from_str], obj.get("map"))
+        password = from_union([from_none, from_str], obj.get("password"))
+        phone = from_union([from_none, from_str], obj.get("phone"))
+        poi_layer = from_union([from_none, from_str], obj.get("poiLayer"))
+        return Session(
+            administrator,
+            attributes,
+            device_limit,
+            device_readonly,
+            disabled,
+            email,
+            id,
+            latitude,
+            limit_commands,
+            longitude,
+            name,
+            readonly,
+            token,
+            twelve_hour_format,
+            user_limit,
+            zoom,
+            coordinate_format,
+            expiration_time,
+            login,
+            map,
+            password,
+            phone,
+            poi_layer,
+        )
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["administrator"] = from_bool(self.administrator)
+        result["attributes"] = to_class(SessionAttributes, self.attributes)
+        result["deviceLimit"] = from_int(self.device_limit)
+        result["deviceReadonly"] = from_bool(self.device_readonly)
+        result["disabled"] = from_bool(self.disabled)
+        result["email"] = from_str(self.email)
+        result["id"] = from_int(self.id)
+        result["latitude"] = to_float(self.latitude)
+        result["limitCommands"] = from_bool(self.limit_commands)
+        result["longitude"] = to_float(self.longitude)
+        result["name"] = from_str(self.name)
+        result["readonly"] = from_bool(self.readonly)
+        result["token"] = from_str(self.token)
+        result["twelveHourFormat"] = from_bool(self.twelve_hour_format)
+        result["userLimit"] = from_int(self.user_limit)
+        result["zoom"] = from_int(self.zoom)
+        result["coordinateFormat"] = from_union(
+            [from_none, from_str], self.coordinate_format
+        )
+        result["expirationTime"] = from_union(
+            [lambda x: x.isoformat(), from_none], self.expiration_time
+        )
+        result["login"] = from_union([from_none, from_str], self.login)
+        result["map"] = from_union([from_none, from_str], self.map)
+        result["password"] = from_union([from_none, from_str], self.password)
+        result["phone"] = from_union([from_none, from_str], self.phone)
+        result["poiLayer"] = from_union([from_none, from_str], self.poi_layer)
+        return result
+
+
+@dataclass
+class Subscription:
+    category: str
+    created_at: datetime
+    id: int
+    trial_end: datetime
+    unique_id: str
+    updated_at: datetime
+    setup_fee: Optional[bool] = None
+    subscription_id: Optional[str] = None
+    trial_duration: Optional[int] = None
+
+    @staticmethod
+    def from_dict(obj: Any) -> "Subscription":
+        assert isinstance(obj, dict)
+        category = from_str(obj.get("category"))
+        created_at = from_datetime(obj.get("createdAt"))
+        id = from_int(obj.get("id"))
+        trial_end = from_datetime(obj.get("trialEnd"))
+        unique_id = from_str(obj.get("uniqueId"))
+        updated_at = from_datetime(obj.get("updatedAt"))
+        setup_fee = from_union([from_bool, from_none], obj.get("setupFee"))
+        subscription_id = from_union([from_none, from_str], obj.get("subscriptionId"))
+        trial_duration = from_union([from_int, from_none], obj.get("trialDuration"))
+        return Subscription(
+            category,
+            created_at,
+            id,
+            trial_end,
+            unique_id,
+            updated_at,
+            setup_fee,
+            subscription_id,
+            trial_duration,
+        )
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["category"] = from_str(self.category)
+        result["createdAt"] = self.created_at.isoformat()
+        result["id"] = from_int(self.id)
+        result["trialEnd"] = self.trial_end.isoformat()
+        result["uniqueId"] = from_str(self.unique_id)
+        result["updatedAt"] = self.updated_at.isoformat()
+        result["setupFee"] = from_union([from_bool, from_none], self.setup_fee)
+        result["subscriptionId"] = from_union(
+            [from_none, from_str], self.subscription_id
+        )
+        result["trialDuration"] = from_union([from_int, from_none], self.trial_duration)
+        return result
+
+
+@dataclass
+class Trip:
+    average_speed: float
+    device_id: int
+    device_name: str
+    distance: float
+    duration: int
+    end_lat: float
+    end_lon: float
+    end_odometer: float
+    end_position_id: int
+    end_time: datetime
+    max_speed: float
+    spent_fuel: float
+    start_lat: float
+    start_lon: float
+    start_odometer: float
+    start_position_id: int
+    start_time: datetime
+    driver_name: Optional[str] = None
+    driver_unique_id: Optional[int] = None
+    end_address: Optional[str] = None
+    start_address: Optional[str] = None
+
+    @staticmethod
+    def from_dict(obj: Any) -> "Trip":
+        assert isinstance(obj, dict)
+        average_speed = from_float(obj.get("averageSpeed"))
+        device_id = from_int(obj.get("deviceId"))
+        device_name = from_str(obj.get("deviceName"))
+        distance = from_float(obj.get("distance"))
+        duration = from_int(obj.get("duration"))
+        end_lat = from_float(obj.get("endLat"))
+        end_lon = from_float(obj.get("endLon"))
+        end_odometer = from_float(obj.get("endOdometer"))
+        end_position_id = from_int(obj.get("endPositionId"))
+        end_time = from_datetime(obj.get("endTime"))
+        max_speed = from_float(obj.get("maxSpeed"))
+        spent_fuel = from_float(obj.get("spentFuel"))
+        start_lat = from_float(obj.get("startLat"))
+        start_lon = from_float(obj.get("startLon"))
+        start_odometer = from_float(obj.get("startOdometer"))
+        start_position_id = from_int(obj.get("startPositionId"))
+        start_time = from_datetime(obj.get("startTime"))
+        driver_name = from_union([from_none, from_str], obj.get("driverName"))
+        driver_unique_id = from_union([from_int, from_none], obj.get("driverUniqueId"))
+        end_address = from_union([from_none, from_str], obj.get("endAddress"))
+        start_address = from_union([from_none, from_str], obj.get("startAddress"))
+        return Trip(
+            average_speed,
+            device_id,
+            device_name,
+            distance,
+            duration,
+            end_lat,
+            end_lon,
+            end_odometer,
+            end_position_id,
+            end_time,
+            max_speed,
+            spent_fuel,
+            start_lat,
+            start_lon,
+            start_odometer,
+            start_position_id,
+            start_time,
+            driver_name,
+            driver_unique_id,
+            end_address,
+            start_address,
+        )
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["averageSpeed"] = to_float(self.average_speed)
+        result["deviceId"] = from_int(self.device_id)
+        result["deviceName"] = from_str(self.device_name)
+        result["distance"] = to_float(self.distance)
+        result["duration"] = from_int(self.duration)
+        result["endLat"] = to_float(self.end_lat)
+        result["endLon"] = to_float(self.end_lon)
+        result["endOdometer"] = to_float(self.end_odometer)
+        result["endPositionId"] = from_int(self.end_position_id)
+        result["endTime"] = self.end_time.isoformat()
+        result["maxSpeed"] = to_float(self.max_speed)
+        result["spentFuel"] = to_float(self.spent_fuel)
+        result["startLat"] = to_float(self.start_lat)
+        result["startLon"] = to_float(self.start_lon)
+        result["startOdometer"] = to_float(self.start_odometer)
+        result["startPositionId"] = from_int(self.start_position_id)
+        result["startTime"] = self.start_time.isoformat()
+        result["driverName"] = from_union([from_none, from_str], self.driver_name)
+        result["driverUniqueId"] = from_union(
+            [from_int, from_none], self.driver_unique_id
+        )
+        result["endAddress"] = from_union([from_none, from_str], self.end_address)
+        result["startAddress"] = from_union([from_none, from_str], self.start_address)
+        return result
 
 
 @dataclass
@@ -446,314 +758,32 @@ class Position:
 
 
 @dataclass
-class SessionAttributes:
-    app_environment: Optional[str] = None
-    app_package: Optional[str] = None
-    app_version: Optional[str] = None
-    fcm_tokens: Optional[List[str]] = None
-    locale: Optional[str] = None
-    send_analytics: Optional[bool] = None
+class WebSocketUpdate:
+    devices: Optional[List[Device]] = None
+    positions: Optional[List[Position]] = None
 
     @staticmethod
-    def from_dict(obj: Any) -> "SessionAttributes":
+    def from_dict(obj: Any) -> "WebSocketUpdate":
         assert isinstance(obj, dict)
-        app_environment = from_union([from_str, from_none], obj.get("appEnvironment"))
-        app_package = from_union([from_str, from_none], obj.get("appPackage"))
-        app_version = from_union([from_str, from_none], obj.get("appVersion"))
-        fcm_tokens = from_union(
-            [lambda x: from_list(from_str, x), from_none], obj.get("fcmTokens")
+        devices = from_union(
+            [lambda x: from_list(Device.from_dict, x), from_none], obj.get("devices")
         )
-        locale = from_union([from_str, from_none], obj.get("locale"))
-        send_analytics = from_union([from_bool, from_none], obj.get("sendAnalytics"))
-        return SessionAttributes(
-            app_environment,
-            app_package,
-            app_version,
-            fcm_tokens,
-            locale,
-            send_analytics,
+        positions = from_union(
+            [lambda x: from_list(Position.from_dict, x), from_none],
+            obj.get("positions"),
         )
+        return WebSocketUpdate(devices, positions)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["appEnvironment"] = from_union(
-            [from_str, from_none], self.app_environment
+        result["devices"] = from_union(
+            [lambda x: from_list(lambda x: to_class(Device, x), x), from_none],
+            self.devices,
         )
-        result["appPackage"] = from_union([from_str, from_none], self.app_package)
-        result["appVersion"] = from_union([from_str, from_none], self.app_version)
-        result["fcmTokens"] = from_union(
-            [lambda x: from_list(from_str, x), from_none], self.fcm_tokens
+        result["positions"] = from_union(
+            [lambda x: from_list(lambda x: to_class(Position, x), x), from_none],
+            self.positions,
         )
-        result["locale"] = from_union([from_str, from_none], self.locale)
-        result["sendAnalytics"] = from_union(
-            [from_bool, from_none], self.send_analytics
-        )
-        return result
-
-
-@dataclass
-class Session:
-    administrator: bool
-    attributes: SessionAttributes
-    device_limit: int
-    device_readonly: bool
-    disabled: bool
-    email: str
-    id: int
-    latitude: float
-    limit_commands: bool
-    longitude: float
-    name: str
-    readonly: bool
-    token: str
-    twelve_hour_format: bool
-    user_limit: int
-    zoom: int
-    coordinate_format: Optional[str] = None
-    expiration_time: Optional[datetime] = None
-    login: Optional[str] = None
-    map: Optional[str] = None
-    password: Optional[str] = None
-    phone: Optional[str] = None
-    poi_layer: Optional[str] = None
-
-    @staticmethod
-    def from_dict(obj: Any) -> "Session":
-        assert isinstance(obj, dict)
-        administrator = from_bool(obj.get("administrator"))
-        attributes = SessionAttributes.from_dict(obj.get("attributes"))
-        device_limit = from_int(obj.get("deviceLimit"))
-        device_readonly = from_bool(obj.get("deviceReadonly"))
-        disabled = from_bool(obj.get("disabled"))
-        email = from_str(obj.get("email"))
-        id = from_int(obj.get("id"))
-        latitude = from_float(obj.get("latitude"))
-        limit_commands = from_bool(obj.get("limitCommands"))
-        longitude = from_float(obj.get("longitude"))
-        name = from_str(obj.get("name"))
-        readonly = from_bool(obj.get("readonly"))
-        token = from_str(obj.get("token"))
-        twelve_hour_format = from_bool(obj.get("twelveHourFormat"))
-        user_limit = from_int(obj.get("userLimit"))
-        zoom = from_int(obj.get("zoom"))
-        coordinate_format = from_union(
-            [from_none, from_str], obj.get("coordinateFormat")
-        )
-        expiration_time = from_union(
-            [from_datetime, from_none], obj.get("expirationTime")
-        )
-        login = from_union([from_none, from_str], obj.get("login"))
-        map = from_union([from_none, from_str], obj.get("map"))
-        password = from_union([from_none, from_str], obj.get("password"))
-        phone = from_union([from_none, from_str], obj.get("phone"))
-        poi_layer = from_union([from_none, from_str], obj.get("poiLayer"))
-        return Session(
-            administrator,
-            attributes,
-            device_limit,
-            device_readonly,
-            disabled,
-            email,
-            id,
-            latitude,
-            limit_commands,
-            longitude,
-            name,
-            readonly,
-            token,
-            twelve_hour_format,
-            user_limit,
-            zoom,
-            coordinate_format,
-            expiration_time,
-            login,
-            map,
-            password,
-            phone,
-            poi_layer,
-        )
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["administrator"] = from_bool(self.administrator)
-        result["attributes"] = to_class(SessionAttributes, self.attributes)
-        result["deviceLimit"] = from_int(self.device_limit)
-        result["deviceReadonly"] = from_bool(self.device_readonly)
-        result["disabled"] = from_bool(self.disabled)
-        result["email"] = from_str(self.email)
-        result["id"] = from_int(self.id)
-        result["latitude"] = to_float(self.latitude)
-        result["limitCommands"] = from_bool(self.limit_commands)
-        result["longitude"] = to_float(self.longitude)
-        result["name"] = from_str(self.name)
-        result["readonly"] = from_bool(self.readonly)
-        result["token"] = from_str(self.token)
-        result["twelveHourFormat"] = from_bool(self.twelve_hour_format)
-        result["userLimit"] = from_int(self.user_limit)
-        result["zoom"] = from_int(self.zoom)
-        result["coordinateFormat"] = from_union(
-            [from_none, from_str], self.coordinate_format
-        )
-        result["expirationTime"] = from_union(
-            [lambda x: x.isoformat(), from_none], self.expiration_time
-        )
-        result["login"] = from_union([from_none, from_str], self.login)
-        result["map"] = from_union([from_none, from_str], self.map)
-        result["password"] = from_union([from_none, from_str], self.password)
-        result["phone"] = from_union([from_none, from_str], self.phone)
-        result["poiLayer"] = from_union([from_none, from_str], self.poi_layer)
-        return result
-
-
-@dataclass
-class Subscription:
-    category: str
-    created_at: datetime
-    id: int
-    trial_end: datetime
-    unique_id: str
-    updated_at: datetime
-    setup_fee: Optional[bool] = None
-    subscription_id: Optional[str] = None
-    trial_duration: Optional[int] = None
-
-    @staticmethod
-    def from_dict(obj: Any) -> "Subscription":
-        assert isinstance(obj, dict)
-        category = from_str(obj.get("category"))
-        created_at = from_datetime(obj.get("createdAt"))
-        id = from_int(obj.get("id"))
-        trial_end = from_datetime(obj.get("trialEnd"))
-        unique_id = from_str(obj.get("uniqueId"))
-        updated_at = from_datetime(obj.get("updatedAt"))
-        setup_fee = from_union([from_bool, from_none], obj.get("setupFee"))
-        subscription_id = from_union([from_none, from_str], obj.get("subscriptionId"))
-        trial_duration = from_union([from_int, from_none], obj.get("trialDuration"))
-        return Subscription(
-            category,
-            created_at,
-            id,
-            trial_end,
-            unique_id,
-            updated_at,
-            setup_fee,
-            subscription_id,
-            trial_duration,
-        )
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["category"] = from_str(self.category)
-        result["createdAt"] = self.created_at.isoformat()
-        result["id"] = from_int(self.id)
-        result["trialEnd"] = self.trial_end.isoformat()
-        result["uniqueId"] = from_str(self.unique_id)
-        result["updatedAt"] = self.updated_at.isoformat()
-        result["setupFee"] = from_union([from_bool, from_none], self.setup_fee)
-        result["subscriptionId"] = from_union(
-            [from_none, from_str], self.subscription_id
-        )
-        result["trialDuration"] = from_union([from_int, from_none], self.trial_duration)
-        return result
-
-
-@dataclass
-class Trip:
-    average_speed: float
-    device_id: int
-    device_name: str
-    distance: float
-    duration: int
-    end_lat: float
-    end_lon: float
-    end_odometer: float
-    end_position_id: int
-    end_time: datetime
-    max_speed: float
-    spent_fuel: float
-    start_lat: float
-    start_lon: float
-    start_odometer: float
-    start_position_id: int
-    start_time: datetime
-    driver_name: Optional[str] = None
-    driver_unique_id: Optional[int] = None
-    end_address: Optional[str] = None
-    start_address: Optional[str] = None
-
-    @staticmethod
-    def from_dict(obj: Any) -> "Trip":
-        assert isinstance(obj, dict)
-        average_speed = from_float(obj.get("averageSpeed"))
-        device_id = from_int(obj.get("deviceId"))
-        device_name = from_str(obj.get("deviceName"))
-        distance = from_float(obj.get("distance"))
-        duration = from_int(obj.get("duration"))
-        end_lat = from_float(obj.get("endLat"))
-        end_lon = from_float(obj.get("endLon"))
-        end_odometer = from_float(obj.get("endOdometer"))
-        end_position_id = from_int(obj.get("endPositionId"))
-        end_time = from_datetime(obj.get("endTime"))
-        max_speed = from_float(obj.get("maxSpeed"))
-        spent_fuel = from_float(obj.get("spentFuel"))
-        start_lat = from_float(obj.get("startLat"))
-        start_lon = from_float(obj.get("startLon"))
-        start_odometer = from_float(obj.get("startOdometer"))
-        start_position_id = from_int(obj.get("startPositionId"))
-        start_time = from_datetime(obj.get("startTime"))
-        driver_name = from_union([from_none, from_str], obj.get("driverName"))
-        driver_unique_id = from_union([from_int, from_none], obj.get("driverUniqueId"))
-        end_address = from_union([from_none, from_str], obj.get("endAddress"))
-        start_address = from_union([from_none, from_str], obj.get("startAddress"))
-        return Trip(
-            average_speed,
-            device_id,
-            device_name,
-            distance,
-            duration,
-            end_lat,
-            end_lon,
-            end_odometer,
-            end_position_id,
-            end_time,
-            max_speed,
-            spent_fuel,
-            start_lat,
-            start_lon,
-            start_odometer,
-            start_position_id,
-            start_time,
-            driver_name,
-            driver_unique_id,
-            end_address,
-            start_address,
-        )
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["averageSpeed"] = to_float(self.average_speed)
-        result["deviceId"] = from_int(self.device_id)
-        result["deviceName"] = from_str(self.device_name)
-        result["distance"] = to_float(self.distance)
-        result["duration"] = from_int(self.duration)
-        result["endLat"] = to_float(self.end_lat)
-        result["endLon"] = to_float(self.end_lon)
-        result["endOdometer"] = to_float(self.end_odometer)
-        result["endPositionId"] = from_int(self.end_position_id)
-        result["endTime"] = self.end_time.isoformat()
-        result["maxSpeed"] = to_float(self.max_speed)
-        result["spentFuel"] = to_float(self.spent_fuel)
-        result["startLat"] = to_float(self.start_lat)
-        result["startLon"] = to_float(self.start_lon)
-        result["startOdometer"] = to_float(self.start_odometer)
-        result["startPositionId"] = from_int(self.start_position_id)
-        result["startTime"] = self.start_time.isoformat()
-        result["driverName"] = from_union([from_none, from_str], self.driver_name)
-        result["driverUniqueId"] = from_union(
-            [from_int, from_none], self.driver_unique_id
-        )
-        result["endAddress"] = from_union([from_none, from_str], self.end_address)
-        result["startAddress"] = from_union([from_none, from_str], self.start_address)
         return result
 
 
@@ -827,3 +857,11 @@ def trip_from_dict(s: Any) -> Trip:
 
 def trip_to_dict(x: Trip) -> Any:
     return to_class(Trip, x)
+
+
+def web_socket_update_from_dict(s: Any) -> WebSocketUpdate:
+    return WebSocketUpdate.from_dict(s)
+
+
+def web_socket_update_to_dict(x: WebSocketUpdate) -> Any:
+    return to_class(WebSocketUpdate, x)
