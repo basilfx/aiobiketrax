@@ -449,29 +449,31 @@ class TraccarApi:
             f"{API_TRACCAR_ENDPOINT}/socket", heartbeat=60.0
         ) as websocket:
             async for message in websocket:
-                _LOGGER.debug("Received WebSocket message.")
+                _LOGGER.debug("Received WebSocket update.")
+
+                json = message.json()
+
+                _RESPONSE_LOGGER.debug(json)
+
+                message = models.web_socket_update_from_dict(json)
 
                 handled = False
 
-                message = message.json()
-
-                _RESPONSE_LOGGER.debug(message)
-
-                if "positions" in message:
+                if message.positions:
                     handled = True
 
-                    for position in message["positions"]:
-                        yield models.position_from_dict(position)
+                    for position in message.positions:
+                        yield position
 
-                if "devices" in message:
+                if message.devices:
                     handled = True
 
-                    for device in message["devices"]:
-                        yield models.device_from_dict(device)
+                    for device in message.devices:
+                        yield device
 
                 if not handled:
                     _LOGGER.debug(
-                        "Received a WebSocket message that could not be handled."
+                        "Received a WebSocket update that could not be handled."
                     )
 
 
