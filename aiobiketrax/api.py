@@ -2,7 +2,6 @@ import inspect
 import logging
 from datetime import datetime
 from decimal import InvalidOperation
-from inspect import isawaitable
 from typing import Any, AsyncIterable, Optional, Union
 
 import aiohttp
@@ -14,7 +13,7 @@ from dateutil.tz import tzutc
 
 from . import models
 from .consts import API_ADMIN_ENDPOINT, API_CLIENT_ID, API_TRACCAR_ENDPOINT
-from .exceptions import ApiError, AuthenticationError
+from .exceptions import ApiError, AuthenticationError, ConnectionError
 
 _LOGGER = logging.getLogger(__name__)
 _RESPONSE_LOGGER = logging.getLogger(__name__ + ".responses")
@@ -77,7 +76,7 @@ def throws_client_connection_error(func):
                 aiohttp.client_exceptions.WSServerHandshakeError,
             ) as e:
 
-                raise ApiError("Unable to connect to remote API.") from e
+                raise ConnectionError("Unable to connect to remote API.") from e
 
     else:
 
@@ -88,7 +87,7 @@ def throws_client_connection_error(func):
                 aiohttp.client_exceptions.ClientConnectorError,
                 aiohttp.client_exceptions.WSServerHandshakeError,
             ) as e:
-                raise ApiError("Unable to connect to remote API.") from e
+                raise ConnectionError("Unable to connect to remote API.") from e
 
     return wrapper
 
@@ -206,8 +205,8 @@ class TraccarApi:
             A list of devices.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
         response = await self._get("devices")
 
@@ -224,8 +223,8 @@ class TraccarApi:
             A device.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
         response = await self._get(f"devices/{id}")
 
@@ -243,8 +242,8 @@ class TraccarApi:
             The updated device.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
         response = await self._put(f"devices/{id}", json=device.to_dict())
 
@@ -260,8 +259,8 @@ class TraccarApi:
             A session instance.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
 
         await self.identity_api.login()
@@ -293,8 +292,8 @@ class TraccarApi:
             A list of positions.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
             ValueError: if the `from_date` or `to_date` do not include timezone
                 information.
         """
@@ -322,8 +321,8 @@ class TraccarApi:
             The position.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
 
         response = await self._get(
@@ -348,8 +347,8 @@ class TraccarApi:
             A list of trips.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
             ValueError: if the `from_date` or `to_date` do not include timezone
                 information.
         """
@@ -475,8 +474,8 @@ class TraccarApi:
             The updated position or device.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
 
         # This will set the cookie necessary for creating a connection.
@@ -564,8 +563,8 @@ class AdminApi:
             The subscription.
 
         Raises:
-            ApiError: The API is unreachable, or the response cannot be parsed
-                correctly.
+            ApiError: The response cannot be parsed correctly.
+            ConnectionError: The API is unreachable.
         """
         response = await self._get(f"subscriptions/{unique_id}")
 
