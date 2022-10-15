@@ -7,7 +7,7 @@ import aiohttp
 from dateutil.tz import tzutc
 
 from . import api, models
-from .exceptions import ApiError
+from .exceptions import ConnectionError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -122,7 +122,7 @@ class Account:
                                 )
 
                     _LOGGER.debug("WebSocket connection terminated gracefully.")
-                except ApiError as e:
+                except ConnectionError as e:
                     _LOGGER.exception(
                         "API error while reading from WebSocket, error counter "
                         "is %d.",
