@@ -561,6 +561,25 @@
         "startTime"
       ],
       "title": "Trip"
+    },
+    "WebSocketUpdate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Device"
+          }
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Position"
+          }
+        }
+      },
+      "WebSocketUpdate": "Trip"
     }
   }
 }
