@@ -7,6 +7,7 @@ import aiohttp
 from dateutil.tz import tzutc
 
 from . import api, models
+from .exceptions import ApiError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -121,22 +122,27 @@ class Account:
                                 )
 
                     _LOGGER.debug("WebSocket connection terminated gracefully.")
-                except aiohttp.ClientError as e:
+                except ApiError as e:
                     _LOGGER.exception(
-                        "Client error while reading from WebSocket, error counter "
+                        "API error while reading from WebSocket, error counter "
                         "is %d.",
                         errors,
                         exc_info=e,
                     )
 
                     if self._update_task is not None:
-                        _LOGGER.debug("Adding exponential backoff delay.")
-
+                        sleep = 2.0 ** max(errors, 6)
                         errors += 1
-                        await asyncio.sleep(2.0 ** max(errors, 6))
+
+                        _LOGGER.debug(
+                            f"Adding exponential backoff delay of {sleep} seconds."
+                        )
+
+                        await asyncio.sleep(sleep)
                 except Exception as e:
                     _LOGGER.exception(
-                        "Unhandled exception while reading from WebSocket.",
+                        "Unhandled exception while reading from WebSocket, error "
+                        "counter is %d.",
                         errors,
                         exc_info=e,
                     )

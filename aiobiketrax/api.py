@@ -1,6 +1,8 @@
+import inspect
 import logging
 from datetime import datetime
 from decimal import InvalidOperation
+from inspect import isawaitable
 from typing import Any, AsyncIterable, Optional, Union
 
 import aiohttp
@@ -24,18 +26,30 @@ def throws_assertion_error(func):
     """Decorator for handling `AssertionErrors`.
 
     Args:
-        func: The actual method to execute.
+        func: The actual method to execute. Must be an async generator function
+            or a regular async function.
 
     Returns:
         A decorated instance of `func` that catches exceptions of type
         `AssertionError`, and wraps them in an `ApiError`.
     """
 
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except AssertionError as e:
-            raise ApiError("Unable to parse API response.") from e
+    if inspect.isasyncgenfunction(func):
+
+        async def wrapper(*args, **kwargs):
+            try:
+                async for x in func(*args, **kwargs):
+                    yield x
+            except AssertionError as e:
+                raise ApiError("Unable to parse API response.") from e
+
+    else:
+
+        async def wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except AssertionError as e:
+                raise ApiError("Unable to parse API response.") from e
 
     return wrapper
 
@@ -44,18 +58,37 @@ def throws_client_connection_error(func):
     """Decorator for handling `aiohttp.client_exceptions.ClientConnectorError`.
 
     Args:
-        func: The actual method to execute.
+        func: The actual method to execute. Must be an async generator function
+            or a regular async function.
 
     Returns:
         A decorated instance of `func` that catches exceptions of type
         `AssertionError`, and wraps them in an `ApiError`.
     """
 
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except aiohttp.client_exceptions.ClientConnectorError as e:
-            raise ApiError("Unable to connect to remote API.") from e
+    if inspect.isasyncgenfunction(func):
+
+        async def wrapper(*args, **kwargs):
+            try:
+                async for x in func(*args, **kwargs):
+                    yield x
+            except (
+                aiohttp.client_exceptions.ClientConnectorError,
+                aiohttp.client_exceptions.WSServerHandshakeError,
+            ) as e:
+
+                raise ApiError("Unable to connect to remote API.") from e
+
+    else:
+
+        async def wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except (
+                aiohttp.client_exceptions.ClientConnectorError,
+                aiohttp.client_exceptions.WSServerHandshakeError,
+            ) as e:
+                raise ApiError("Unable to connect to remote API.") from e
 
     return wrapper
 
@@ -429,6 +462,8 @@ class TraccarApi:
 
             return json
 
+    @throws_assertion_error
+    @throws_client_connection_error
     async def create_socket(
         self,
     ) -> AsyncIterable[Union[models.Position, models.Device]]:
@@ -438,6 +473,10 @@ class TraccarApi:
 
         Yields:
             The updated position or device.
+
+        Raises:
+            ApiError: The API is unreachable, or the response cannot be parsed
+                correctly.
         """
 
         # This will set the cookie necessary for creating a connection.
