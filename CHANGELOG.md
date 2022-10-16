@@ -1,13 +1,19 @@
 # Changelog
 
-## v0.2.2
-Unreleased
+## v0.3.0
+Released 16 October 2022
 
 Highlights:
 * Fixed: setup fee is a boolean.
+* Fixed: trial end is optional.
+* Added: add support for exceptions (see `exceptions.py`).
+* Added: configure heartbeat for WebSocket.
+* Improved: WebSocket message handling.
 * Improved: additional debug logging.
 
-The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.2.1...v0.2.2).
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.2.1...v0.3.0).
+
+This release supersedes v0.2.2a1.
 
 ## v0.2.1
 Released 25 August 2022
