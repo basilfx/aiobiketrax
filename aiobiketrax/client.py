@@ -351,6 +351,14 @@ class Device:
         return self._device.attributes.auto_guard
 
     @property
+    def geofence_radius(self) -> Optional[int]:
+        return self._device.attributes.geofence_radius
+
+    @property
+    def guard_type(self) -> Optional[str]:
+        return self._device.attributes.guard_type
+
+    @property
     def latitude(self) -> Optional[float]:
         if not self._position:
             return None
