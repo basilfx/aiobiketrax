@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.4.0
+Released 23 October 2022
+
+Highlights:
+Added: expose 'geofence_radius' and 'guard_type'.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.3.0...v0.4.0).
+
 ## v0.3.0
 Released 16 October 2022
 
