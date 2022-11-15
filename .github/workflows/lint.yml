@@ -38,6 +38,8 @@ jobs:
 
       - run: poetry install --no-interaction
 
-      - run: poetry run black --check --diff aiobiketrax
+      - run: poetry run flake8 aiobiketrax tests
 
-      - run: poetry run isort --check --diff aiobiketrax
+      - run: poetry run black --check --diff aiobiketrax tests
+
+      - run: poetry run isort --check --diff aiobiketrax tests
