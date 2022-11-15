@@ -53,7 +53,7 @@ tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy"
 
 [[package]]
 name = "auth0-python"
-version = "3.23.1"
+version = "3.24.0"
 description = "Auth0 Python SDK"
 category = "main"
 optional = false
@@ -573,8 +573,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 auth0-python = [
-    {file = "auth0-python-3.23.1.tar.gz", hash = "sha256:b1711683acebc0cb3ca424a5a09b4b2f7a3b6405d34e231712023bb036a882be"},
-    {file = "auth0_python-3.23.1-py2.py3-none-any.whl", hash = "sha256:360b7db0466bc72a9251a43b9a0c6e7e0a74aa7725a60239990aead3be21d864"},
+    {file = "auth0-python-3.24.0.tar.gz", hash = "sha256:88d7bce9472342e77f2f25fd8b060819b3557000e3a43e2618cd7a0fe5212c71"},
+    {file = "auth0_python-3.24.0-py2.py3-none-any.whl", hash = "sha256:a76e308df407fad9c6c29cd9de9a89bc5c1f7236f051c824923904046aea27a1"},
 ]
 black = [
     {file = "black-22.10.0-1fixedarch-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:5cc42ca67989e9c3cf859e84c2bf014f6633db63d1cbdf8fdb666dcd9e77e3fa"},
