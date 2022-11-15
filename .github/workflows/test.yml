@@ -1,4 +1,4 @@
-name: Linting
+name: Testing
 
 on:
   push:
@@ -38,8 +38,4 @@ jobs:
 
       - run: poetry install --no-interaction
 
-      - run: poetry run flake8 aiobiketrax tests
-
-      - run: poetry run black --check --diff aiobiketrax tests
-
-      - run: poetry run isort --check --diff aiobiketrax tests
+      - run: poetry run pytest

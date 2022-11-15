@@ -1,4 +1,6 @@
 __pycache__/
+.mypy_cache
+.pytest_cache/
 .vscode/
 contrib/generator/models.py
 contrib/generator/node_modules/
