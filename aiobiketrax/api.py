@@ -54,7 +54,13 @@ def throws_assertion_error(func):
 
 
 def throws_client_connection_error(func):
-    """Decorator for handling `aiohttp.client_exceptions.ClientConnectorError`.
+    """Decorator for handling connection exceptions.
+
+    Currently, the following exceptions will be handled:
+
+    - `aiohttp.client_exceptions.ClientConnectorError`
+    - `aiohttp.client_exceptions.ClientResponseError`
+    - `aiohttp.client_exceptions.WSServerHandshakeError`
 
     Args:
         func: The actual method to execute. Must be an async generator function
@@ -73,9 +79,9 @@ def throws_client_connection_error(func):
                     yield x
             except (
                 aiohttp.client_exceptions.ClientConnectorError,
+                aiohttp.client_exceptions.ClientResponseError,
                 aiohttp.client_exceptions.WSServerHandshakeError,
             ) as e:
-
                 raise ConnectionError("Unable to connect to remote API.") from e
 
     else:
@@ -85,6 +91,7 @@ def throws_client_connection_error(func):
                 return await func(*args, **kwargs)
             except (
                 aiohttp.client_exceptions.ClientConnectorError,
+                aiohttp.client_exceptions.ClientResponseError,
                 aiohttp.client_exceptions.WSServerHandshakeError,
             ) as e:
                 raise ConnectionError("Unable to connect to remote API.") from e
