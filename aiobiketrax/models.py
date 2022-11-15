@@ -1,5 +1,7 @@
 # This file is auto-generated. See the README.md for more information.
 
+# flake8: noqa
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, cast
