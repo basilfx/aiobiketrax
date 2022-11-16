@@ -67,6 +67,17 @@ async with aiohttp.ClientSession() as session:
 For demonstration and testing purposes, one can use the CLI as well. If you
 have the package installed, use `biketrax --help` command to get started.
 
+### Mock server
+For development, a mock server is included in `contrib/mock/`. Simply run
+`server.py` and adapt `aiobiketrax/consts.py` to use other endpoints.
+
+```python
+API_TRACCAR_ENDPOINT = "http://localhost:5555/traccar/api"
+API_ADMIN_ENDPOINT = "http://localhost:5555/admin/api"
+```
+
+Do note that authentication is not mocked.
+
 ## Contributing
 See the [`CONTRIBUTING.md`](CONTRIBUTING.md) file.
 
