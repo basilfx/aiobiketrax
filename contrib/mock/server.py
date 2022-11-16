@@ -350,7 +350,7 @@ async def socket(request: web.Request):
 
 
 def get_trips(request: web.Request):
-    device_id = request.query.get("device_id")
+    device_id = request.query.get("deviceId")
     from_date = request.query.get("from")
     to_date = request.query.get("to")
 
@@ -378,6 +378,6 @@ if __name__ == "__main__":
     aio_app.router.add_route("GET", "/traccar/api/positions", get_positions)
     aio_app.router.add_route("POST", "/traccar/api/session", post_session)
     aio_app.router.add_route("GET", "/traccar/api/socket", socket)
-    aio_app.router.add_route("GET", "/traccar/api/trips", get_trips)
+    aio_app.router.add_route("GET", "/traccar/api/reports/trips", get_trips)
 
     web.run_app(aio_app, port=5555)
