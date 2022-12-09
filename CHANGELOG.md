@@ -1,10 +1,19 @@
 # Changelog
 
+## v0.5.0
+Released 09 December 2022
+
+Highlights:
+* Fixed: WebSocket not reconnecting on ClientResponseError.
+* Improved: upgraded dependencies.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.4.0...v0.5.0).
+
 ## v0.4.0
 Released 23 October 2022
 
 Highlights:
-Added: expose 'geofence_radius' and 'guard_type'.
+* Added: expose 'geofence_radius' and 'guard_type'.
 
 The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.3.0...v0.4.0).
 
