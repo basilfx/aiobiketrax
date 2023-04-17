@@ -156,22 +156,22 @@ tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy 
 
 [[package]]
 name = "auth0-python"
-version = "3.24.0"
+version = "4.1.1"
 description = "Auth0 Python SDK"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*"
+python-versions = ">=3.7"
 files = [
-    {file = "auth0-python-3.24.0.tar.gz", hash = "sha256:88d7bce9472342e77f2f25fd8b060819b3557000e3a43e2618cd7a0fe5212c71"},
-    {file = "auth0_python-3.24.0-py2.py3-none-any.whl", hash = "sha256:a76e308df407fad9c6c29cd9de9a89bc5c1f7236f051c824923904046aea27a1"},
+    {file = "auth0-python-4.1.1.tar.gz", hash = "sha256:a2bf65aef096053adb461283b35d8a548ba4a1ea364fc49bdac7b1e7b0df02b7"},
+    {file = "auth0_python-4.1.1-py2.py3-none-any.whl", hash = "sha256:a4f137ae92f78ccd8fc64ecaaeff4bcd3a1acbae9435f6f1d5b81a5512e9eb0b"},
 ]
 
 [package.dependencies]
-pyjwt = {version = ">=1.7.1", extras = ["crypto"]}
+pyjwt = {version = ">=2.6.0", extras = ["crypto"]}
 requests = ">=2.14.0"
 
 [package.extras]
-test = ["coverage", "mock (>=1.3.0)", "pre-commit"]
+test = ["coverage", "pre-commit"]
 
 [[package]]
 name = "black"
@@ -1053,4 +1053,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "c61298bfc5f9a2cec8b80c49580ffe7e9dd4aaa5eec4521cf7e634f547f6a6b0"
+content-hash = "638090960a143ec0db6972d5e9582543f561f4854d66eda86b84ea241d1ab054"
