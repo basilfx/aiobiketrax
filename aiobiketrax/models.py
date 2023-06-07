@@ -489,7 +489,9 @@ class Passport:
 class DeviceAttributes:
     alarm: Optional[bool] = None
     auto_guard: Optional[bool] = None
+    fw_version: Optional[str] = None
     geofence_radius: Optional[int] = None
+    gps_disabled: Optional[bool] = None
     guarded: Optional[bool] = None
     guard_type: Optional[str] = None
     last_alarm: Optional[int] = None
@@ -502,7 +504,9 @@ class DeviceAttributes:
         assert isinstance(obj, dict)
         alarm = from_union([from_bool, from_none], obj.get("alarm"))
         auto_guard = from_union([from_bool, from_none], obj.get("autoGuard"))
+        fw_version = from_union([from_str, from_none], obj.get("fwVersion"))
         geofence_radius = from_union([from_int, from_none], obj.get("geofenceRadius"))
+        gps_disabled = from_union([from_bool, from_none], obj.get("gpsDisabled"))
         guarded = from_union([from_bool, from_none], obj.get("guarded"))
         guard_type = from_union([from_str, from_none], obj.get("guardType"))
         last_alarm = from_union([from_int, from_none], obj.get("lastAlarm"))
@@ -512,7 +516,9 @@ class DeviceAttributes:
         return DeviceAttributes(
             alarm,
             auto_guard,
+            fw_version,
             geofence_radius,
+            gps_disabled,
             guarded,
             guard_type,
             last_alarm,
@@ -525,9 +531,11 @@ class DeviceAttributes:
         result: dict = {}
         result["alarm"] = from_union([from_bool, from_none], self.alarm)
         result["autoGuard"] = from_union([from_bool, from_none], self.auto_guard)
+        result["fwVersion"] = from_union([from_str, from_none], self.fw_version)
         result["geofenceRadius"] = from_union(
             [from_int, from_none], self.geofence_radius
         )
+        result["gpsDisabled"] = from_union([from_bool, from_none], self.gps_disabled)
         result["guarded"] = from_union([from_bool, from_none], self.guarded)
         result["guardType"] = from_union([from_str, from_none], self.guard_type)
         result["lastAlarm"] = from_union([from_int, from_none], self.last_alarm)

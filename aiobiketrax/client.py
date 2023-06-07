@@ -437,6 +437,10 @@ class Device:
             Trip(self, (trip.start_time, trip.end_time)) for trip in self._sorted_trips
         ]
 
+    @property
+    def firmware_version(self) -> Optional[str]:
+        return self._device.attributes.fw_version
+
 
 @final
 class Trip:
