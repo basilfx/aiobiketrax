@@ -56,6 +56,7 @@ async def command_devices(arguments: argparse.Namespace):
 
         for device in account.devices:
             await device.update_position()
+            await device.update_subscription()
 
             sys.stdout.write(pprint.pformat(device_to_dict(device)) + "\n")
 
