@@ -351,6 +351,13 @@ class Device:
         return self._device.attributes.auto_guard
 
     @property
+    def is_charging(self) -> Optional[bool]:
+        if not self._position:
+            return None
+
+        return self._position.charge
+
+    @property
     def geofence_radius(self) -> Optional[int]:
         return self._device.attributes.geofence_radius
 
@@ -406,6 +413,44 @@ class Device:
             return None
 
         return self._position.attributes.battery_level
+
+    @property
+    def estimated_battery_level(self) -> Optional[float]:
+        if not self._position:
+            return None
+
+        battery_level = self._position.attributes.battery_level
+
+        if battery_level is None:
+            return None
+
+        # Correct the battery level based on the last reported device time. The
+        # tracker assumes 20 days of stand-by time at 100% battery level.
+        delta = datetime.now(tzutc()) - self._position.device_time
+        correction = (delta.days / 2.0) * 10.0
+
+        return max(0.0, battery_level - correction)
+
+    @property
+    def fix_time(self) -> Optional[datetime]:
+        if not self._position:
+            return None
+
+        return self._position.fix_time
+
+    @property
+    def device_time(self) -> Optional[datetime]:
+        if not self._position:
+            return None
+
+        return self._position.device_time
+
+    @property
+    def server_time(self) -> Optional[datetime]:
+        if not self._position:
+            return None
+
+        return self._position.server_time
 
     @property
     def total_distance(self) -> Optional[float]:
