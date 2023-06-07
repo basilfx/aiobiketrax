@@ -355,7 +355,7 @@ class Device:
         if not self._position:
             return None
 
-        return self._position.charge
+        return self._position.attributes.charge
 
     @property
     def geofence_radius(self) -> Optional[int]:
