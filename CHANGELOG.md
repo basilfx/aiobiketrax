@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.0
+Released 12 June 2023
+
+Highlights:
+* Added: estimated battery level (similar to the app).
+* Added: missing properties (fwVersion and gpsDisabled).
+* Improved: upgraded dependencies.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v0.5.0...v1.0.0).
+
 ## v0.5.0
 Released 09 December 2022
 
