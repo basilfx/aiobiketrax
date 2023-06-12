@@ -429,7 +429,15 @@ class Device:
         delta = datetime.now(tzutc()) - self._position.device_time
         correction = (delta.days / 2.0) * 10.0
 
-        return max(0.0, battery_level - correction)
+        estimated_battery_level = battery_level - correction
+
+        # Ensure the estimated battery level is within the valid range.
+        if estimated_battery_level < 0.0:
+            return 0.0
+        elif estimated_battery_level > 100.0:
+            return 100.0
+        else:
+            return estimated_battery_level
 
     @property
     def fix_time(self) -> Optional[datetime]:
