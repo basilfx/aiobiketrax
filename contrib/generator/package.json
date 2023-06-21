@@ -3,6 +3,6 @@
     "generate-models": "quicktype --src-lang schema --lang python --python-version 3.7 --out models.py schema.json#/definitions/"
   },
   "dependencies": {
-    "quicktype": "^15.0.261"
+    "quicktype": "^23.0.0"
   }
 }
