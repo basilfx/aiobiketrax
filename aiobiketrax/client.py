@@ -472,9 +472,14 @@ class Device:
         if not self._subscription:
             return None
 
-        # TODO: unable to verify, but this will probably will not work for
-        # expired trial subscriptions.
         return self._subscription.trial_end
+
+    @property
+    def subscription_type(self) -> Optional[str]:
+        if not self._subscription:
+            return None
+
+        return self._subscription.category
 
     @property
     def last_updated(self) -> datetime:

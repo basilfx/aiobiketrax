@@ -234,12 +234,12 @@ class Subscription:
     category: str
     created_at: datetime
     id: int
-    trial_end: datetime
     unique_id: str
     updated_at: datetime
     setup_fee: Optional[bool] = None
     subscription_id: Optional[str] = None
     trial_duration: Optional[int] = None
+    trial_end: Optional[datetime] = None
 
     @staticmethod
     def from_dict(obj: Any) -> "Subscription":
@@ -247,22 +247,22 @@ class Subscription:
         category = from_str(obj.get("category"))
         created_at = from_datetime(obj.get("createdAt"))
         id = from_int(obj.get("id"))
-        trial_end = from_datetime(obj.get("trialEnd"))
         unique_id = from_str(obj.get("uniqueId"))
         updated_at = from_datetime(obj.get("updatedAt"))
         setup_fee = from_union([from_bool, from_none], obj.get("setupFee"))
         subscription_id = from_union([from_none, from_str], obj.get("subscriptionId"))
         trial_duration = from_union([from_int, from_none], obj.get("trialDuration"))
+        trial_end = from_union([from_datetime, from_none], obj.get("trialEnd"))
         return Subscription(
             category,
             created_at,
             id,
-            trial_end,
             unique_id,
             updated_at,
             setup_fee,
             subscription_id,
             trial_duration,
+            trial_end,
         )
 
     def to_dict(self) -> dict:
@@ -270,7 +270,6 @@ class Subscription:
         result["category"] = from_str(self.category)
         result["createdAt"] = self.created_at.isoformat()
         result["id"] = from_int(self.id)
-        result["trialEnd"] = self.trial_end.isoformat()
         result["uniqueId"] = from_str(self.unique_id)
         result["updatedAt"] = self.updated_at.isoformat()
         result["setupFee"] = from_union([from_bool, from_none], self.setup_fee)
@@ -278,6 +277,9 @@ class Subscription:
             [from_none, from_str], self.subscription_id
         )
         result["trialDuration"] = from_union([from_int, from_none], self.trial_duration)
+        result["trialEnd"] = from_union(
+            [lambda x: x.isoformat(), from_none], self.trial_end
+        )
         return result
 
 

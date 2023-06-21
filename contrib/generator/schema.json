@@ -431,7 +431,7 @@
       "additionalProperties": false,
       "properties": {
         "trialEnd": {
-          "type": "string",
+          "type": ["null", "string"],
           "format": "date-time"
         },
         "subscriptionId": {
