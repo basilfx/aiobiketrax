@@ -482,6 +482,13 @@ class Device:
         return self._subscription.category
 
     @property
+    def subscription_addons(self) -> Optional[list[str]]:
+        if not self._subscription:
+            return None
+
+        return self._subscription.addon_ids
+
+    @property
     def last_updated(self) -> datetime:
         return self._device.last_update
 

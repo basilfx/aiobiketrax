@@ -236,6 +236,7 @@ class Subscription:
     id: int
     unique_id: str
     updated_at: datetime
+    addon_ids: Optional[List[str]] = None
     setup_fee: Optional[bool] = None
     subscription_id: Optional[str] = None
     trial_duration: Optional[int] = None
@@ -249,6 +250,9 @@ class Subscription:
         id = from_int(obj.get("id"))
         unique_id = from_str(obj.get("uniqueId"))
         updated_at = from_datetime(obj.get("updatedAt"))
+        addon_ids = from_union(
+            [lambda x: from_list(from_str, x), from_none], obj.get("addonIds")
+        )
         setup_fee = from_union([from_bool, from_none], obj.get("setupFee"))
         subscription_id = from_union([from_none, from_str], obj.get("subscriptionId"))
         trial_duration = from_union([from_int, from_none], obj.get("trialDuration"))
@@ -259,6 +263,7 @@ class Subscription:
             id,
             unique_id,
             updated_at,
+            addon_ids,
             setup_fee,
             subscription_id,
             trial_duration,
@@ -272,6 +277,9 @@ class Subscription:
         result["id"] = from_int(self.id)
         result["uniqueId"] = from_str(self.unique_id)
         result["updatedAt"] = self.updated_at.isoformat()
+        result["addonIds"] = from_union(
+            [lambda x: from_list(from_str, x), from_none], self.addon_ids
+        )
         result["setupFee"] = from_union([from_bool, from_none], self.setup_fee)
         result["subscriptionId"] = from_union(
             [from_none, from_str], self.subscription_id
