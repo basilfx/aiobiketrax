@@ -100,18 +100,24 @@ class SessionAttributes:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["appEnvironment"] = from_union(
-            [from_str, from_none], self.app_environment
-        )
-        result["appPackage"] = from_union([from_str, from_none], self.app_package)
-        result["appVersion"] = from_union([from_str, from_none], self.app_version)
-        result["fcmTokens"] = from_union(
-            [lambda x: from_list(from_str, x), from_none], self.fcm_tokens
-        )
-        result["locale"] = from_union([from_str, from_none], self.locale)
-        result["sendAnalytics"] = from_union(
-            [from_bool, from_none], self.send_analytics
-        )
+        if self.app_environment is not None:
+            result["appEnvironment"] = from_union(
+                [from_str, from_none], self.app_environment
+            )
+        if self.app_package is not None:
+            result["appPackage"] = from_union([from_str, from_none], self.app_package)
+        if self.app_version is not None:
+            result["appVersion"] = from_union([from_str, from_none], self.app_version)
+        if self.fcm_tokens is not None:
+            result["fcmTokens"] = from_union(
+                [lambda x: from_list(from_str, x), from_none], self.fcm_tokens
+            )
+        if self.locale is not None:
+            result["locale"] = from_union([from_str, from_none], self.locale)
+        if self.send_analytics is not None:
+            result["sendAnalytics"] = from_union(
+                [from_bool, from_none], self.send_analytics
+            )
         return result
 
 
@@ -277,14 +283,18 @@ class Subscription:
         result["id"] = from_int(self.id)
         result["uniqueId"] = from_str(self.unique_id)
         result["updatedAt"] = self.updated_at.isoformat()
-        result["addonIds"] = from_union(
-            [lambda x: from_list(from_str, x), from_none], self.addon_ids
-        )
+        if self.addon_ids is not None:
+            result["addonIds"] = from_union(
+                [lambda x: from_list(from_str, x), from_none], self.addon_ids
+            )
         result["setupFee"] = from_union([from_bool, from_none], self.setup_fee)
         result["subscriptionId"] = from_union(
             [from_none, from_str], self.subscription_id
         )
-        result["trialDuration"] = from_union([from_int, from_none], self.trial_duration)
+        if self.trial_duration is not None:
+            result["trialDuration"] = from_union(
+                [from_int, from_none], self.trial_duration
+            )
         result["trialEnd"] = from_union(
             [lambda x: x.isoformat(), from_none], self.trial_end
         )
@@ -462,36 +472,54 @@ class Passport:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["bikePictures"] = from_union(
-            [lambda x: from_list(from_str, x), from_none], self.bike_pictures
-        )
-        result["bikeType"] = from_union([from_str, from_none], self.bike_type)
-        result["colour"] = from_union([from_str, from_none], self.colour)
-        result["engine"] = from_union([from_str, from_none], self.engine)
-        result["frameNumber"] = from_union([from_str, from_none], self.frame_number)
-        result["insurance"] = from_union([from_bool, from_none], self.insurance)
-        result["manufacturer"] = from_union([from_str, from_none], self.manufacturer)
-        result["model"] = from_union([from_str, from_none], self.model)
-        result["price"] = from_union([from_str, from_none], self.price)
-        result["receiptPictures"] = from_union(
-            [lambda x: from_list(from_str, x), from_none], self.receipt_pictures
-        )
-        result["registrationCode"] = from_union(
-            [from_str, from_none], self.registration_code
-        )
-        result["shiftingSystemGears"] = from_union(
-            [from_str, from_none], self.shifting_system_gears
-        )
-        result["shiftingSystemManufacturer"] = from_union(
-            [from_str, from_none], self.shifting_system_manufacturer
-        )
-        result["shiftingSystemModel"] = from_union(
-            [from_str, from_none], self.shifting_system_model
-        )
-        result["specialFeatures"] = from_union(
-            [from_str, from_none], self.special_features
-        )
-        result["used"] = from_union([from_bool, from_none], self.used)
+        if self.bike_pictures is not None:
+            result["bikePictures"] = from_union(
+                [lambda x: from_list(from_str, x), from_none], self.bike_pictures
+            )
+        if self.bike_type is not None:
+            result["bikeType"] = from_union([from_str, from_none], self.bike_type)
+        if self.colour is not None:
+            result["colour"] = from_union([from_str, from_none], self.colour)
+        if self.engine is not None:
+            result["engine"] = from_union([from_str, from_none], self.engine)
+        if self.frame_number is not None:
+            result["frameNumber"] = from_union([from_str, from_none], self.frame_number)
+        if self.insurance is not None:
+            result["insurance"] = from_union([from_bool, from_none], self.insurance)
+        if self.manufacturer is not None:
+            result["manufacturer"] = from_union(
+                [from_str, from_none], self.manufacturer
+            )
+        if self.model is not None:
+            result["model"] = from_union([from_str, from_none], self.model)
+        if self.price is not None:
+            result["price"] = from_union([from_str, from_none], self.price)
+        if self.receipt_pictures is not None:
+            result["receiptPictures"] = from_union(
+                [lambda x: from_list(from_str, x), from_none], self.receipt_pictures
+            )
+        if self.registration_code is not None:
+            result["registrationCode"] = from_union(
+                [from_str, from_none], self.registration_code
+            )
+        if self.shifting_system_gears is not None:
+            result["shiftingSystemGears"] = from_union(
+                [from_str, from_none], self.shifting_system_gears
+            )
+        if self.shifting_system_manufacturer is not None:
+            result["shiftingSystemManufacturer"] = from_union(
+                [from_str, from_none], self.shifting_system_manufacturer
+            )
+        if self.shifting_system_model is not None:
+            result["shiftingSystemModel"] = from_union(
+                [from_str, from_none], self.shifting_system_model
+            )
+        if self.special_features is not None:
+            result["specialFeatures"] = from_union(
+                [from_str, from_none], self.special_features
+            )
+        if self.used is not None:
+            result["used"] = from_union([from_bool, from_none], self.used)
         return result
 
 
@@ -539,23 +567,36 @@ class DeviceAttributes:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["alarm"] = from_union([from_bool, from_none], self.alarm)
-        result["autoGuard"] = from_union([from_bool, from_none], self.auto_guard)
-        result["fwVersion"] = from_union([from_str, from_none], self.fw_version)
-        result["geofenceRadius"] = from_union(
-            [from_int, from_none], self.geofence_radius
-        )
-        result["gpsDisabled"] = from_union([from_bool, from_none], self.gps_disabled)
-        result["guarded"] = from_union([from_bool, from_none], self.guarded)
-        result["guardType"] = from_union([from_str, from_none], self.guard_type)
-        result["lastAlarm"] = from_union([from_int, from_none], self.last_alarm)
-        result["passport"] = from_union(
-            [lambda x: to_class(Passport, x), from_none], self.passport
-        )
-        result["stolen"] = from_union([from_bool, from_none], self.stolen)
-        result["trialEnd"] = from_union(
-            [lambda x: x.isoformat(), from_none], self.trial_end
-        )
+        if self.alarm is not None:
+            result["alarm"] = from_union([from_bool, from_none], self.alarm)
+        if self.auto_guard is not None:
+            result["autoGuard"] = from_union([from_bool, from_none], self.auto_guard)
+        if self.fw_version is not None:
+            result["fwVersion"] = from_union([from_str, from_none], self.fw_version)
+        if self.geofence_radius is not None:
+            result["geofenceRadius"] = from_union(
+                [from_int, from_none], self.geofence_radius
+            )
+        if self.gps_disabled is not None:
+            result["gpsDisabled"] = from_union(
+                [from_bool, from_none], self.gps_disabled
+            )
+        if self.guarded is not None:
+            result["guarded"] = from_union([from_bool, from_none], self.guarded)
+        if self.guard_type is not None:
+            result["guardType"] = from_union([from_str, from_none], self.guard_type)
+        if self.last_alarm is not None:
+            result["lastAlarm"] = from_union([from_int, from_none], self.last_alarm)
+        if self.passport is not None:
+            result["passport"] = from_union(
+                [lambda x: to_class(Passport, x), from_none], self.passport
+            )
+        if self.stolen is not None:
+            result["stolen"] = from_union([from_bool, from_none], self.stolen)
+        if self.trial_end is not None:
+            result["trialEnd"] = from_union(
+                [lambda x: x.isoformat(), from_none], self.trial_end
+            )
         return result
 
 
@@ -673,17 +714,32 @@ class PositionAttributes:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["alarm"] = from_union([from_str, from_none], self.alarm)
-        result["armed"] = from_union([from_bool, from_none], self.armed)
-        result["batteryLevel"] = from_union([from_int, from_none], self.battery_level)
-        result["charge"] = from_union([from_bool, from_none], self.charge)
-        result["distance"] = from_union([to_float, from_none], self.distance)
-        result["hours"] = from_union([from_int, from_none], self.hours)
-        result["ignition"] = from_union([from_bool, from_none], self.ignition)
-        result["index"] = from_union([from_int, from_none], self.index)
-        result["motion"] = from_union([from_bool, from_none], self.motion)
-        result["status"] = from_union([from_int, from_none], self.status)
-        result["totalDistance"] = from_union([to_float, from_none], self.total_distance)
+        if self.alarm is not None:
+            result["alarm"] = from_union([from_str, from_none], self.alarm)
+        if self.armed is not None:
+            result["armed"] = from_union([from_bool, from_none], self.armed)
+        if self.battery_level is not None:
+            result["batteryLevel"] = from_union(
+                [from_int, from_none], self.battery_level
+            )
+        if self.charge is not None:
+            result["charge"] = from_union([from_bool, from_none], self.charge)
+        if self.distance is not None:
+            result["distance"] = from_union([to_float, from_none], self.distance)
+        if self.hours is not None:
+            result["hours"] = from_union([from_int, from_none], self.hours)
+        if self.ignition is not None:
+            result["ignition"] = from_union([from_bool, from_none], self.ignition)
+        if self.index is not None:
+            result["index"] = from_union([from_int, from_none], self.index)
+        if self.motion is not None:
+            result["motion"] = from_union([from_bool, from_none], self.motion)
+        if self.status is not None:
+            result["status"] = from_union([from_int, from_none], self.status)
+        if self.total_distance is not None:
+            result["totalDistance"] = from_union(
+                [to_float, from_none], self.total_distance
+            )
         return result
 
 
@@ -796,14 +852,16 @@ class WebSocketUpdate:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["devices"] = from_union(
-            [lambda x: from_list(lambda x: to_class(Device, x), x), from_none],
-            self.devices,
-        )
-        result["positions"] = from_union(
-            [lambda x: from_list(lambda x: to_class(Position, x), x), from_none],
-            self.positions,
-        )
+        if self.devices is not None:
+            result["devices"] = from_union(
+                [lambda x: from_list(lambda x: to_class(Device, x), x), from_none],
+                self.devices,
+            )
+        if self.positions is not None:
+            result["positions"] = from_union(
+                [lambda x: from_list(lambda x: to_class(Position, x), x), from_none],
+                self.positions,
+            )
         return result
 
 
