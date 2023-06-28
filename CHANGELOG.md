@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0
+Released 28 June 2023
+
+Hightlights:
+* Fixed: subscription end date for B2B subscriptions.
+* Added: addon identifiers.
+* Upgraded: model generator.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v1.0.0...v1.1.0).
+
 ## v1.0.0
 Released 12 June 2023
 
