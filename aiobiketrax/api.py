@@ -381,6 +381,9 @@ class TraccarApi:
                     self.identity_api.username,
                     self.identity_api.traccar_password,
                 ),
+                headers={
+                    "Accept": "application/json",
+                },
                 params=params,
             )
 
@@ -413,6 +416,9 @@ class TraccarApi:
                     self.identity_api.username,
                     self.identity_api.traccar_password,
                 ),
+                headers={
+                    "Accept": "application/json",
+                },
                 data=data,
                 json=json,
             )
@@ -446,6 +452,9 @@ class TraccarApi:
                     self.identity_api.username,
                     self.identity_api.traccar_password,
                 ),
+                headers={
+                    "Accept": "application/json",
+                },
                 data=data,
                 json=json,
             )
