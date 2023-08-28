@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.1
+Released 28 June 2023
+
+Hightlights:
+* Fixed: include 'Accept' header in JSON request (fixes trips endpoint).
+* Fixed: allow 'setupFee' property to be an integer as well.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v1.1.0...v1.1.1).
+
 ## v1.1.0
 Released 28 June 2023
 
