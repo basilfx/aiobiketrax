@@ -450,7 +450,7 @@
           "type": "integer"
         },
         "setupFee": {
-          "type": ["null", "boolean"]
+          "type": ["null", "boolean", "integer"]
         },
         "id": {
           "type": "integer"
