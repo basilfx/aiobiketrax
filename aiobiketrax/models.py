@@ -4,7 +4,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, cast
+from typing import Any, Callable, Dict, List, Optional, Type, TypeVar, Union, cast
 
 import dateutil.parser
 
@@ -243,7 +243,7 @@ class Subscription:
     unique_id: str
     updated_at: datetime
     addon_ids: Optional[List[str]] = None
-    setup_fee: Optional[bool] = None
+    setup_fee: Optional[Union[int, bool]] = None
     subscription_id: Optional[str] = None
     trial_duration: Optional[int] = None
     trial_end: Optional[datetime] = None
@@ -259,7 +259,7 @@ class Subscription:
         addon_ids = from_union(
             [lambda x: from_list(from_str, x), from_none], obj.get("addonIds")
         )
-        setup_fee = from_union([from_bool, from_none], obj.get("setupFee"))
+        setup_fee = from_union([from_none, from_int, from_bool], obj.get("setupFee"))
         subscription_id = from_union([from_none, from_str], obj.get("subscriptionId"))
         trial_duration = from_union([from_int, from_none], obj.get("trialDuration"))
         trial_end = from_union([from_datetime, from_none], obj.get("trialEnd"))
@@ -267,10 +267,10 @@ class Subscription:
             category,
             created_at,
             id,
+            setup_fee,
             unique_id,
             updated_at,
             addon_ids,
-            setup_fee,
             subscription_id,
             trial_duration,
             trial_end,
@@ -281,13 +281,15 @@ class Subscription:
         result["category"] = from_str(self.category)
         result["createdAt"] = self.created_at.isoformat()
         result["id"] = from_int(self.id)
+        result["setupFee"] = from_union(
+            [from_none, from_int, from_bool], self.setup_fee
+        )
         result["uniqueId"] = from_str(self.unique_id)
         result["updatedAt"] = self.updated_at.isoformat()
         if self.addon_ids is not None:
             result["addonIds"] = from_union(
                 [lambda x: from_list(from_str, x), from_none], self.addon_ids
             )
-        result["setupFee"] = from_union([from_bool, from_none], self.setup_fee)
         result["subscriptionId"] = from_union(
             [from_none, from_str], self.subscription_id
         )
