@@ -1,7 +1,7 @@
 # Changelog
 
 ## v1.1.1
-Released 28 June 2023
+Released 28 August 2023
 
 Hightlights:
 * Fixed: include 'Accept' header in JSON request (fixes trips endpoint).
