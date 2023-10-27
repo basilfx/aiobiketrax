@@ -431,7 +431,7 @@
       "additionalProperties": false,
       "properties": {
         "addonIds": {
-          "type": ["null", "array"],
+          "type": ["null", "array", "string"],
           "items": {
             "type": "string"
           }
