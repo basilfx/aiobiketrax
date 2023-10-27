@@ -486,6 +486,9 @@ class Device:
         if not self._subscription:
             return None
 
+        if isinstance(self._subscription.addon_ids, str):
+            return [self._subscription.addon_ids]
+
         return self._subscription.addon_ids
 
     @property
