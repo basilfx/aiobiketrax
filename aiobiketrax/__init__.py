@@ -1,3 +1,3 @@
 from .client import *  # noqa
 
-__version__ = "1.1.2a1"
+__version__ = "1.1.2"

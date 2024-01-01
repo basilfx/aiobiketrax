@@ -14,7 +14,7 @@ profile = "black"
 
 [tool.poetry]
 name = "aiobiketrax"
-version = "1.1.2a1"
+version = "1.1.2"
 description = "Python library for interacting with the PowUnity BikeTrax GPS tracker."
 authors = ["Bas Stottelaar <basstottelaar@gmail.com>"]
 keywords = ["biketrax", "powunity", "asyncio", "iot", "gps"]
