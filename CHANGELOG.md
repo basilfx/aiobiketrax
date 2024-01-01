@@ -1,12 +1,14 @@
 # Changelog
 
 ## v1.1.2
-Unreleased
+Released 1 January 2024
 
 Highlights:
 * Fixed: addonIds is a string
 
 The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v1.1.1...v1.1.2).
+
+This release supersedes v1.1.2a1.
 
 ## v1.1.1
 Released 28 August 2023
