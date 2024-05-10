@@ -92,6 +92,8 @@ async def command_stream(arguments: argparse.Namespace):
                         sys.stdout.write(pprint.pformat(updates) + "\n")
 
                 event.clear()
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            pass
         finally:
             await account.stop()
 
