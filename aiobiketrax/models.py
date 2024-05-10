@@ -60,7 +60,7 @@ def to_class(c: Type[T], x: Any) -> dict:
 
 
 def to_float(x: Any) -> float:
-    assert isinstance(x, float)
+    assert isinstance(x, (int, float))
     return x
 
 
@@ -606,7 +606,6 @@ class DeviceAttributes:
 class Device:
     attributes: DeviceAttributes
     disabled: bool
-    geofence_ids: List[Any]
     group_id: int
     id: int
     last_update: datetime
@@ -624,7 +623,6 @@ class Device:
         assert isinstance(obj, dict)
         attributes = DeviceAttributes.from_dict(obj.get("attributes"))
         disabled = from_bool(obj.get("disabled"))
-        geofence_ids = from_list(lambda x: x, obj.get("geofenceIds"))
         group_id = from_int(obj.get("groupId"))
         id = from_int(obj.get("id"))
         last_update = from_datetime(obj.get("lastUpdate"))
@@ -639,7 +637,6 @@ class Device:
         return Device(
             attributes,
             disabled,
-            geofence_ids,
             group_id,
             id,
             last_update,
@@ -657,7 +654,6 @@ class Device:
         result: dict = {}
         result["attributes"] = to_class(DeviceAttributes, self.attributes)
         result["disabled"] = from_bool(self.disabled)
-        result["geofenceIds"] = from_list(lambda x: x, self.geofence_ids)
         result["groupId"] = from_int(self.group_id)
         result["id"] = from_int(self.id)
         result["lastUpdate"] = self.last_update.isoformat()

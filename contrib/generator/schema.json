@@ -30,10 +30,6 @@
         "positionId": {
           "type": "integer"
         },
-        "geofenceIds": {
-          "type": "array",
-          "items": {}
-        },
         "phone": {
           "type": ["null", "string"]
         },
@@ -55,7 +51,6 @@
         "category",
         "contact",
         "disabled",
-        "geofenceIds",
         "groupId",
         "id",
         "lastUpdate",
