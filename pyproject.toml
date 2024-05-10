@@ -28,10 +28,10 @@ include = [
 
 [tool.poetry.dependencies]
 aiohttp = "3.9.5"
-auth0-python = "^3.23.1"
+auth0-python = "^3.24.0"
 python = "^3.12"
-PyJWT = "^2.4.0"
-python-dateutil = "^2.8.2"
+PyJWT = "^2.8.0"
+python-dateutil = "^2.9.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
