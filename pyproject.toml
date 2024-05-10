@@ -27,7 +27,7 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-aiohttp = "^3.8.1"
+aiohttp = "3.9.5"
 auth0-python = "^3.23.1"
 python = "^3.12"
 PyJWT = "^2.4.0"
