@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.2.0
+Released 13 May 2024
+
+Highlights:
+* Fixed: API incompatibility on geofenceIds.
+* Upgraded: Python 3.12 compatibility.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v1.1.2...v1.2.0).
+
 ## v1.1.2
 Released 1 January 2024
 
