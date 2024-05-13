@@ -274,9 +274,24 @@ class Device:
             tracking_enabled,
         )
 
+        # The app makes a distinction between older and newer tracker devices,
+        # depending on the unique identifier. It is not clear how to handle
+        # this correctly, so a warning is issued for now.
+        if self._device.unique_id.startswith(
+            "4710264"
+        ) or self._device.unique_id.startswith("8710"):
+            _LOGGER.warn(
+                "Setting tracking enabled state might not work for device %s, "
+                + "because it is considered a newer type of device.",
+                self._id,
+            )
+
         device = models.Device.from_dict(self._device.to_dict())
 
+        # The app seems to do this in two separate call, but combining them
+        # seems to work as well.
         device.disabled = not tracking_enabled
+        device.attributes.gps_disabled = not tracking_enabled
 
         self._account._devices[self._id] = await self._account.traccar_api.put_device(
             self._id, device
