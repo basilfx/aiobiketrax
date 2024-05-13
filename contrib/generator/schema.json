@@ -100,6 +100,9 @@
         },
         "fwVersion": {
           "type": "string"
+        },
+        "doubleBattery": {
+          "type": "boolean"
         }
       },
       "title": "DeviceAttributes"
