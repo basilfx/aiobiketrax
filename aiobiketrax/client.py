@@ -320,7 +320,21 @@ class Device:
 
     @property
     def id(self) -> int:
+        """
+        Get the identifier of the device.
+        """
         return self._id
+
+    @property
+    def unique_id(self) -> str:
+        """
+        Get the unique identifier of the device.
+
+        This is the identifier on the device settings page in the app. However,
+        it is not the same identifier as the `id` property on the device
+        response object.
+        """
+        return self._device.unique_id
 
     @property
     def name(self) -> str:
