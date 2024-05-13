@@ -372,6 +372,10 @@ class Device:
         return self._position.attributes.charge
 
     @property
+    def is_double_battery(self) -> bool:
+        return self._device.attributes.double_battery or False
+
+    @property
     def geofence_radius(self) -> Optional[int]:
         return self._device.attributes.geofence_radius
 

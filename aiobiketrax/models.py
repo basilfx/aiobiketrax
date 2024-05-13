@@ -529,6 +529,7 @@ class Passport:
 class DeviceAttributes:
     alarm: Optional[bool] = None
     auto_guard: Optional[bool] = None
+    double_battery: Optional[bool] = None
     fw_version: Optional[str] = None
     geofence_radius: Optional[int] = None
     gps_disabled: Optional[bool] = None
@@ -544,6 +545,7 @@ class DeviceAttributes:
         assert isinstance(obj, dict)
         alarm = from_union([from_bool, from_none], obj.get("alarm"))
         auto_guard = from_union([from_bool, from_none], obj.get("autoGuard"))
+        double_battery = from_union([from_bool, from_none], obj.get("doubleBattery"))
         fw_version = from_union([from_str, from_none], obj.get("fwVersion"))
         geofence_radius = from_union([from_int, from_none], obj.get("geofenceRadius"))
         gps_disabled = from_union([from_bool, from_none], obj.get("gpsDisabled"))
@@ -556,6 +558,7 @@ class DeviceAttributes:
         return DeviceAttributes(
             alarm,
             auto_guard,
+            double_battery,
             fw_version,
             geofence_radius,
             gps_disabled,
@@ -573,6 +576,10 @@ class DeviceAttributes:
             result["alarm"] = from_union([from_bool, from_none], self.alarm)
         if self.auto_guard is not None:
             result["autoGuard"] = from_union([from_bool, from_none], self.auto_guard)
+        if self.double_battery is not None:
+            result["doubleBattery"] = from_union(
+                [from_bool, from_none], self.double_battery
+            )
         if self.fw_version is not None:
             result["fwVersion"] = from_union([from_str, from_none], self.fw_version)
         if self.geofence_radius is not None:
