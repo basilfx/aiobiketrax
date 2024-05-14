@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.0
+Released 14 May 2024
+
+Highlights:
+* Addded: expose unique identifier of device.
+* Added: support the double battery option.
+* Fixed: tracking state could not be updated.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v1.2.0...v1.3.0).
+
 ## v1.2.0
 Released 13 May 2024
 
