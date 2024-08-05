@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.1
+Released 5 August 2024
+
+Highlights:
+* Fixed: do not pin aiohttp version.
+
+The full list of commits can be found [here](https://github.com/basilfx/aiobiketrax/compare/v1.3.0...v1.3.1).
+
 ## v1.3.0
 Released 14 May 2024
 
