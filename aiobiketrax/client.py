@@ -124,8 +124,7 @@ class Account:
                     _LOGGER.debug("WebSocket connection terminated gracefully.")
                 except ConnectionError as e:
                     _LOGGER.exception(
-                        "API error while reading from WebSocket, error counter "
-                        "is %d.",
+                        "API error while reading from WebSocket, error counter is %d.",
                         errors,
                         exc_info=e,
                     )
@@ -194,10 +193,10 @@ class Device:
         """
         _LOGGER.debug("Updating positions of device %s.", self._id)
 
-        self._account._positions[self._id] = (
-            await self._account.traccar_api.get_position(
-                self._id, self._device.position_id
-            )
+        self._account._positions[
+            self._id
+        ] = await self._account.traccar_api.get_position(
+            self._id, self._device.position_id
         )
 
     async def update_subscription(self) -> None:
@@ -206,9 +205,9 @@ class Device:
         """
         _LOGGER.debug("Updating subscription of device %s.", self._id)
 
-        self._account._subscriptions[self._id] = (
-            await self._account.admin_api.get_subscription(self._device.unique_id)
-        )
+        self._account._subscriptions[
+            self._id
+        ] = await self._account.admin_api.get_subscription(self._device.unique_id)
 
     async def update_trips(
         self, from_date: datetime = None, to_date: datetime = None

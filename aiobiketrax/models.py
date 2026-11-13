@@ -1,6 +1,6 @@
 # This file is auto-generated. See the README.md for more information.
 
-# flake8: noqa
+# ruff: noqa
 
 from dataclasses import dataclass
 from datetime import datetime

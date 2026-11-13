@@ -1,48 +1,50 @@
-[tool.black]
-line-length = 88
-target-version = ["py312"]
-exclude = '''
-(
-    \.git/
-  | \.vscode/
-  | env/
-)
-'''
-
-[tool.isort]
-profile = "black"
-
-[tool.poetry]
+[project]
 name = "aiobiketrax"
 version = "1.3.1"
 description = "Python library for interacting with the PowUnity BikeTrax GPS tracker."
-authors = ["Bas Stottelaar <basstottelaar@gmail.com>"]
+authors = [{ name = "Bas Stottelaar", email = "basstottelaar@gmail.com" }]
 keywords = ["biketrax", "powunity", "asyncio", "iot", "gps"]
 readme = "README.md"
 license = "MIT"
-homepage = "https://github.com/basilfx/aiobiketrax"
-repository = "https://github.com/basilfx/aiobiketrax"
-include = [
-    "LICENSE.md",
+license-files = ["LICENSE.md"]
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.9.5,<4",
+    "auth0-python>=3.24.0,<4",
+    "PyJWT>=2.8.0,<3",
+    "python-dateutil>=2.9.0,<3",
 ]
 
-[tool.poetry.dependencies]
-aiohttp = "^3.9.5"
-auth0-python = "^3.24.0"
-python = "^3.12"
-PyJWT = "^2.8.0"
-python-dateutil = "^2.9.0"
+[project.urls]
+Homepage = "https://github.com/basilfx/aiobiketrax"
+Repository = "https://github.com/basilfx/aiobiketrax"
 
-[tool.poetry.group.dev.dependencies]
-black = "^24.2.0"
-isort = "^5.13.0"
-pytest = "^8.2"
-flake8 = "^7.0.0"
-mypy = "^1.10.0"
-
-[tool.poetry.scripts]
-biketrax = 'aiobiketrax.cli:run'
+[project.scripts]
+biketrax = "aiobiketrax.cli:run"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.0,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = ["env", "contrib"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["aiobiketrax", "tests"]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+    "types-python-dateutil>=2.9.0.20261104",
+]
