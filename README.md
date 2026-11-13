@@ -53,9 +53,8 @@ import aiohttp
 
 async with aiohttp.ClientSession() as session:
     account = Account(
-        username="someone@example.org",
-        password="secret",
-        session=session)
+        username="someone@example.org", password="secret", session=session
+    )
 
     await account.update_devices()
 

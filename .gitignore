@@ -6,3 +6,4 @@ contrib/generator/models.py
 contrib/generator/node_modules/
 dist/
 env/
+.venv/
